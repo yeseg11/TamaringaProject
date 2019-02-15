@@ -1,0 +1,23 @@
+.video-view{
+  margin: auto;
+  height: 60%;
+  width: 80%;
+  border: 3px solid green;
+  padding: 10px;
+}
+
+.title{
+  text-align: center;
+  width: 100%;
+  margin: auto;
+  padding: 10px;
+  border: 3px solid green;
+
+}
+
+.play-buttons{
+  /*margin: auto;*/
+  margin-left: 38%;
+  margin-right: 38%;
+
+}
