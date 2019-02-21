@@ -8,7 +8,10 @@ import { Validators} from '@angular/forms';
 // import of Angular Material Components that used for project
 import { MatInputModule,
          MatCardModule,
-         MatButtonModule } from '@angular/material';
+         MatRadioModule,
+         MatButtonModule,
+         MatTabsModule
+       } from '@angular/material';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -18,14 +21,14 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { UserViewComponent } from './user/user-view/user-view.component';
 import { AdminViewComponent } from './admin/admin-view/admin-view.component';
-import { NewUserComponent } from './admin/new-user/new-user.component';
+// import { NewUserComponent } from './admin/new-user/new-user.component';
 
 // create routing
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'user', component: UserViewComponent },
   { path: 'admin', component: AdminViewComponent },
-  { path: 'admin/new-user', component: NewUserComponent },
+  // { path: 'admin/new-user', component: NewUserComponent },
 ];
 
 @NgModule({
@@ -34,7 +37,7 @@ const appRoutes: Routes = [
     LoginComponent,
     UserViewComponent,
     AdminViewComponent,
-    NewUserComponent
+    // NewUserComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +47,8 @@ const appRoutes: Routes = [
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    MatRadioModule,
+    MatTabsModule,
     FormsModule
   ],
   providers: [],

@@ -1,52 +1,49 @@
+<header class="title col-md-4">
+  <h1> ברוך הבא אסף להלן תכנים בשבילך</h1>
+</header>
 <div class="view ">
 
+    <div class="video-view col-md-11">
 
-  <div class="title col-md-4">
-    <h1> ברוך הבא להלן תכנים בשבילך</h1>
-  </div>
-<div class="video-rating">
-  <div class="video-view col-md-10">
-
-    <div class="col-md-12 video">
-      <div class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item video" id="myvideo" src="https://www.youtube.com/embed/v64KOxKVLVg" allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <div class="play-buttons row">
-        <div class="col-md-3">
-          <button class="play btn-lg">
-            <i class="fas fa-backward"></i>
-          </button>
-        </div>
-        <div class="col-md-3">
-          <button class="play btn-lg">
-            <i class="fas fa-pause"></i>
-          </button>
-        </div>
-        <div class="col-md-3">
-          <button class="play btn-lg">
-            <i class="fas fa-play"></i>
-          </button>
-        </div>
-        <div class="col-md-3">
-          <button class="play btn-lg">
-            <i class="fas fa-forward"></i>
-          </button>
+      <div class="col-md-12 video">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item video" id="myvideo" src="https://www.youtube.com/embed/v64KOxKVLVg" allowfullscreen></iframe>
         </div>
       </div>
+      <div class="col-md-12">
+        <div class="play-buttons row">
+          <div class="col-md-3">
+            <button class="play btn-lg">
+              <i class="fas fa-backward"></i>
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="play btn-lg">
+              <i class="fas fa-pause"></i>
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="play btn-lg">
+              <i class="fas fa-play"></i>
+            </button>
+          </div>
+          <div class="col-md-3">
+            <button class="play btn-lg">
+              <i class="fas fa-forward"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
     </div>
-
-
-  </div>
-  <div class="rating col-md-2">
-    <mat-radio-group class="example-radio-group" [(ngModel)]="favoriteSeason">
-      <p>?אהבת את השיר</p>
-      <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
-        {{season}}
-      </mat-radio-button>
-    </mat-radio-group>
-    <!--<div class="example-selected-value">Your favorite season is: {{favoriteSeason}}</div>-->
-  </div>
-</div>
+    <div class="rating col-md-1">
+      <mat-radio-group class="example-radio-group" [(ngModel)]="favoriteSeason">
+        <p>?אהבת את השיר</p>
+        <mat-radio-button class="example-radio-button" *ngFor="let season of seasons" [value]="season">
+          {{season}}
+        </mat-radio-button>
+      </mat-radio-group>
+      <!--<div class="example-selected-value">Your favorite season is: {{favoriteSeason}}</div>-->
+    </div>
 </div>

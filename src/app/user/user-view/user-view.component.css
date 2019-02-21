@@ -1,9 +1,10 @@
 .video-view{
   margin: auto;
-  height: 60%;
-  width: 80%;
-  border: 3px solid green;
+  height: 100%;
+  width: 79%;
   padding: 10px;
+  position: fixed;
+  left: 5%;
 }
 
 .title{
@@ -11,7 +12,6 @@
   width: 100%;
   margin: auto;
   padding: 10px;
-  border: 3px solid green;
 
 }
 
@@ -20,4 +20,27 @@
   margin-left: 38%;
   margin-right: 38%;
 
+}
+.video{
+  height: 80%;
+
+}
+
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+  position: fixed;
+  right: 5%;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin: 15px 0;
+}
+
+.video-view, .rating{
+  display: inline-block;
 }
