@@ -4,13 +4,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
+import { HttpClientModule} from '@angular/common/http';
 
 // import of Angular Material Components that used for project
 import { MatInputModule,
          MatCardModule,
          MatRadioModule,
          MatButtonModule,
-         MatTabsModule
+         MatTabsModule,
+         MatDialogModule
        } from '@angular/material';
 
 // Routing
@@ -21,14 +23,14 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { UserViewComponent } from './user/user-view/user-view.component';
 import { AdminViewComponent } from './admin/admin-view/admin-view.component';
-// import { NewUserComponent } from './admin/new-user/new-user.component';
+import { NewUserComponent } from './admin/new-user/new-user.component';
 
 // create routing
 const appRoutes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'user', component: UserViewComponent },
   { path: 'admin', component: AdminViewComponent },
-  // { path: 'admin/new-user', component: NewUserComponent },
+  { path: 'admin/new-user', component: NewUserComponent },
 ];
 
 @NgModule({
@@ -37,7 +39,7 @@ const appRoutes: Routes = [
     LoginComponent,
     UserViewComponent,
     AdminViewComponent,
-    // NewUserComponent
+    NewUserComponent
   ],
   imports: [
     BrowserModule,
@@ -47,8 +49,10 @@ const appRoutes: Routes = [
     MatInputModule,
     MatCardModule,
     MatButtonModule,
+    HttpClientModule,
     MatRadioModule,
     MatTabsModule,
+    MatDialogModule,
     FormsModule
   ],
   providers: [],

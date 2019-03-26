@@ -1,5 +1,13 @@
 /* BASIC */
 
+h1{
+  text-align: center;
+  color: midnightblue;
+}
+mat-form-field {
+  width: 100%;
+}
+
 html {
   background-color: #56baed;
 }
