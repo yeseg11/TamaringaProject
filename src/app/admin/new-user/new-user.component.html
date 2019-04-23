@@ -89,14 +89,112 @@
 <mat-card>
   <!--<mat-spinner></mat-spinner>-->
   <form (submit)="onAddUser(addUserForm)" #addUserForm="ngForm">
+
     <mat-form-field>
-      <input matInput name="id" ngModel type="id" placeholder="ID" #idInput="ngModel" required id>
+      <input matInput name="fullName" ngModel type="text" placeholder="Full Name" #idInput="ngModel" required>
       <!--<mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>-->
     </mat-form-field>
+
+    <mat-form-field>
+      <input matInput name="id" ngModel type="number" placeholder="ID" #idInput="ngModel" required id>
+      <!--<mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>-->
+    </mat-form-field>
+
     <mat-form-field>
       <input matInput name="password" ngModel type="password" placeholder="Password" #passwordInput="ngModel" required>
       <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
     </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Select a Country</mat-label>
+      <mat-select id="country" name="country" [(ngModel)]="country" required>
+        <mat-option>None</mat-option>
+        <mat-option value="AQ">Antarctica</mat-option>
+        <mat-option value="AR">Argentina</mat-option>
+        <mat-option value="AU">Australia</mat-option>
+        <mat-option value="AT">Austria</mat-option>
+        <mat-option value="BB">Barbados</mat-option>
+        <mat-option value="BE">Belgium</mat-option>
+        <mat-option value="BA">Bosnia And Herzegovina</mat-option>
+        <mat-option value="BR">Brazil</mat-option>
+        <mat-option value="BG">Bulgaria</mat-option>
+        <mat-option value="CM">Cameroon</mat-option>
+        <mat-option value="CL">Chile</mat-option>
+        <mat-option value="CN">China</mat-option>
+        <mat-option value="CO">Colombia</mat-option>
+        <mat-option value="CG">Congo</mat-option>
+        <mat-option value="CD">Congo, Democratic Republic</mat-option>
+        <mat-option value="HR">Croatia</mat-option>
+        <mat-option value="CU">Cuba</mat-option>
+        <mat-option value="CZ">Czech Republic</mat-option>
+        <mat-option value="DK">Denmark</mat-option>
+        <mat-option value="DO">Dominican Republic</mat-option>
+        <mat-option value="EG">Egypt</mat-option>
+        <mat-option value="EE">Estonia</mat-option>
+        <mat-option value="FI">Finland</mat-option>
+        <mat-option value="FR">France</mat-option>
+        <mat-option value="GA">Gabon</mat-option>
+        <mat-option value="DE">Germany</mat-option>
+        <mat-option value="GR">Greece</mat-option>
+        <mat-option value="GL">Greenland</mat-option>
+        <mat-option value="GP">Guadeloupe</mat-option>
+        <mat-option value="GT">Guatemala</mat-option>
+        <mat-option value="GN">Guinea</mat-option>
+        <mat-option value="HK">Hong Kong</mat-option>
+        <mat-option value="HU">Hungary</mat-option>
+        <mat-option value="IS">Iceland</mat-option>
+        <mat-option value="IN">India</mat-option>
+        <mat-option value="ID">Indonesia</mat-option>
+        <mat-option value="IR">Iran, Islamic Republic Of</mat-option>
+        <mat-option value="IE">Ireland</mat-option>
+        <mat-option value="IL">Israel</mat-option>
+        <mat-option value="IT">Italy</mat-option>
+        <mat-option value="JM">Jamaica</mat-option>
+        <mat-option value="JP">Japan</mat-option>
+        <mat-option value="KE">Kenya</mat-option>
+        <mat-option value="KR">Korea</mat-option>
+        <mat-option value="LV">Latvia</mat-option>
+        <mat-option value="LB">Lebanon</mat-option>
+        <mat-option value="LU">Luxembourg</mat-option>
+        <mat-option value="MK">Macedonia</mat-option>
+        <mat-option value="MY">Malaysia</mat-option>
+        <mat-option value="MX">Mexico</mat-option>
+        <mat-option value="MA">Morocco</mat-option>
+        <mat-option value="NL">Netherlands</mat-option>
+        <mat-option value="NZ">New Zealand</mat-option>
+        <mat-option value="NG">Nigeria</mat-option>
+        <mat-option value="NO">Norway</mat-option>
+        <mat-option value="PE">Peru</mat-option>
+        <mat-option value="PH">Philippines</mat-option>
+        <mat-option value="PL">Poland</mat-option>
+        <mat-option value="PT">Portugal</mat-option>
+        <mat-option value="PR">Puerto Rico</mat-option>
+        <mat-option value="RO">Romania</mat-option>
+        <mat-option value="RU">Russian Federation</mat-option>
+        <mat-option value="SN">Senegal</mat-option>
+        <mat-option value="SC">Seychelles</mat-option>
+        <mat-option value="SG">Singapore</mat-option>
+        <mat-option value="SK">Slovakia</mat-option>
+        <mat-option value="SI">Slovenia</mat-option>
+        <mat-option value="SU">Soviet Union</mat-option>
+        <mat-option value="ZA">South Africa</mat-option>
+        <mat-option value="ES">Spain</mat-option>
+        <mat-option value="SZ">Swaziland</mat-option>
+        <mat-option value="SE">Sweden</mat-option>
+        <mat-option value="CH">Switzerland</mat-option>
+        <mat-option value="TW">Taiwan</mat-option>
+        <mat-option value="TR">Turkey</mat-option>
+        <mat-option value="GB">United Kingdom</mat-option>
+        <mat-option value="US">United States</mat-option>
+        <mat-option value="UM">United States Outlying Islands</mat-option>
+        <mat-option value="UY">Uruguay</mat-option>
+        <mat-option value="VE">Venezuela</mat-option>
+        <mat-option value="ZW">Zimbabwe</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <p>You selected: {{selected}}</p>
+
     <button mat-raised-button color="accent" type="submit">Add User</button>
   </form>
 </mat-card>

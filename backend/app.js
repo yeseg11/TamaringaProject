@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const bcrypt = require("bcrypt"); //move later to routes/users
+// const bcrypt = require("bcrypt"); //move later to routes/users
 const User = require("./models/users");
 
 const app = express();
@@ -47,16 +47,42 @@ app.use((req, res, next) => {
 //passing a javascript object to it to configure it and there
 // set an id property because my user model has an id property
 
-app.post("/api/user/signup", (req, res, next) => {
-  const user = req.body;
-  console.log("in app.post --- server");
-  console.log(user);
-  res.status(201).json({
-    message: 'Post added successfully -- returned from server'
-  });
-});
+// app.post("/api/user/signup", (req, res, next) => {
+//   const user = req.body;
+//   console.log("in app.post --- server");
+//   console.log(user);
+//   res.status(201).json({
+//     message: 'Post added successfully -- returned from server'
+//   });
+// });
 
-module.exports = app;
+//save user to the DB
+app.post("/api/user/signup", (req, res, next) => {
+  //once the hash func is done, we get the hash param and then inside the then block we create a new user
+  // bcrypt.hash(req.body.password, 10)
+  //   .then(hash => {
+      const user = new User({
+        id: req.body.id,
+        password: req.body.password,
+        fullName: req.body.fullName
+        // country: req.body.country
+      });
+      user.save()
+        .then(result => {
+          console.log(result);
+          res.status(201).json({
+            message: 'User created!',
+            result: result //we send the result data so we can see what's inside there
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json({
+            error: err
+          });
+        });
+    // });
+});
 
 
 // app.get("api/user/signup", (req, res, next) => {
@@ -78,40 +104,4 @@ module.exports = app;
 //   });
 // });
 
-
-// app.post("api/user/signup", (req, res, next) =>
-//   const user = req.body;
-//   console.log("in app.post --- server");
-//   console.log(req);
-//   bcrypt.hash(req.body.password, 10)
-//     .then(hash => {
-//       const user = new User({
-//         id: req.body.id,
-//         password: hash
-//       });
-//       user.save()
-//         .then(result => {
-//           res.status(201).json({
-//             message: 'User created!',
-//             result: result
-//           });
-//         })
-//         .catch(err => {
-//           res.status(500).json({
-//             error: err
-//           });
-//         });
-//     })});
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, DELETE, OPTIONS"
-//   );
-//   next();
-// });
+module.exports = app;

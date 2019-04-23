@@ -12,7 +12,8 @@ import { MatInputModule,
          MatRadioModule,
          MatButtonModule,
          MatTabsModule,
-         MatDialogModule
+         MatDialogModule,
+         MatSelectModule
        } from '@angular/material';
 
 // Routing
@@ -53,7 +54,8 @@ const appRoutes: Routes = [
     MatRadioModule,
     MatTabsModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
