@@ -3,13 +3,15 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 // const bcrypt = require("bcrypt"); //move later to routes/users
 const User = require("./models/users");
+const jwt = require('jsonwebtoken');
+const checkAuth = require("./middleware/check-auth"); //just pass the refernce to that funtion (and not execute) and Express will execute for us
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-mongoose.connect("mongodb+srv://david:RrOvOoe4ZFDiVpYf@cluster0-bo1pz.mongodb.net/test?retryWrites=true", { useNewUrlParser: true })
+mongoose.connect("mongodb+srv://david:RrOvOoe4ZFDiVpYf@cluster0-bo1pz.mongodb.net/Tamaringa", { useNewUrlParser: true })
   .then(() => {
     console.log("Connected to database!");
 })
@@ -62,10 +64,11 @@ app.post("/api/user/signup", (req, res, next) => {
   // bcrypt.hash(req.body.password, 10)
   //   .then(hash => {
       const user = new User({
+       // fullName: req.body.fullName,
         id: req.body.id,
+        //age: req.body.age,
+        //country: req.body.country,
         password: req.body.password,
-        fullName: req.body.fullName
-        // country: req.body.country
       });
       user.save()
         .then(result => {
@@ -85,23 +88,32 @@ app.post("/api/user/signup", (req, res, next) => {
 });
 
 
-// app.get("api/user/signup", (req, res, next) => {
-//   const posts = [
-//     {
-//       id: "Miriam",
-//       title: "First server-side post",
-//       content: "This is coming from the server"
-//     },
-//     {
-//       id: "Allalouf",
-//       title: "Second server-side post",
-//       content: "This is coming from the server!"
-//     }
-//   ];
-//   res.status(200).json({
-//     message: "Posts fetched successfully!",
-//     posts: posts
-//   });
-// });
+
+app.post("/api/user/login", (req, res, next) => {
+  User.findOne({ id: req.body.id })
+    .then(user => {
+    console.log(user);
+    if(!user) {
+      return res.status(401).json({
+        message: "Auth failed"
+      });
+    }
+    //return bycrypt.compare(req.body.password, user.password);
+
+    //creates a new token based on some input data of your choice - in our case we'll use the id and the _id that MongoDB provides for us
+    const token = jwt.sign(
+        {id: user.id, userId: user._id},
+        'secret_this_should_be_longer',
+        { expiresIn: "1h" }
+      );
+      res.status(200).json({
+        token: token,
+        expiresIn: 3600
+      });
+      //console.log(res);
+  });
+});
+
+
 
 module.exports = app;

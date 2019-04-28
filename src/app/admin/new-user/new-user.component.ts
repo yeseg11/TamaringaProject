@@ -8,6 +8,7 @@ import {AuthService} from '../../auth/auth.service';
   styleUrls: ['./new-user.component.css']
 })
 export class NewUserComponent {
+  isLoading = false;
 
   constructor(public authService: AuthService) {}
 
@@ -19,16 +20,10 @@ export class NewUserComponent {
       console.log('invalid form');
       return;
     }
-    // this.authService.createUser(form.value.fullName, form.value.id, form.value.password, form.value.country);
-    this.authService.createUser(form.value.fullName, form.value.id, form.value.password, form.value.country);
-    console.log('after server response');
+    // set the spinner loading to true
+    // this.isLoading = true; not working
+    this.authService.createUser(form.value.fullName, form.value.id, form.value.age, form.value.password, form.value.country);
+    console.log('server: createUser()');
     // form.resetForm();
   }
-  // model:any = {}
-  //
-  // ngOnInit() {
-  //
-  // }
-
-
 }
