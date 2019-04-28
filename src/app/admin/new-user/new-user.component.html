@@ -4,17 +4,17 @@
 
     <mat-form-field>
       <input matInput name="fullName" ngModel type="text" placeholder="Full Name" #idInput="ngModel" required>
-      <!--<mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>-->
+      <mat-error *ngIf="idInput.invalid">Please enter a name.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <input matInput name="id" ngModel type="number" placeholder="ID" #idInput="ngModel" required id>
-      <!--<mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>-->
+      <mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <input matInput name="age" ngModel type="number" placeholder="Age" #idInput="ngModel" required>
-      <!--<mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>-->
+      <mat-error *ngIf="idInput.invalid">Please enter a valid age.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -24,7 +24,7 @@
 
     <mat-form-field>
       <mat-label>Select a Country</mat-label>
-      <mat-select id="country" name="country" required>
+      <mat-select id="country" name="country" [(ngModel)]="country" required>
         <mat-option>None</mat-option>
         <mat-option value="AQ">Antarctica</mat-option>
         <mat-option value="AR">Argentina</mat-option>

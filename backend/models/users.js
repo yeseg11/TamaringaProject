@@ -3,11 +3,11 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 //Create a schema of user
 const userSchema = mongoose.Schema({
-  fullName: { type: String, required: false},
+  fullName: { type: String, required: true},
   id: { type: Number, required: true},
-  age: { type: Number, required: false},
+  age: { type: Number, required: true},
   password: { type: String, required: true},
-  country: { type: String, required: false}
+  country: { type: String, required: true}
   });
 
 //validate the unique option, before it saves it to database it will check for unique id

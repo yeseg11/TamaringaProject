@@ -9,28 +9,28 @@ const checkAuth = require("./middleware/check-auth"); //just pass the refernce t
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
-mongoose.connect("mongodb+srv://david:RrOvOoe4ZFDiVpYf@cluster0-bo1pz.mongodb.net/Tamaringa", { useNewUrlParser: true })
-  .then(() => {
-    console.log("Connected to database!");
-})
-  .catch(() => {
-    console.log("Connection to database failed");
-  });
+mongoose.connect("mongodb+srv://david:RrOvOoe4ZFDiVpYf@cluster0-bo1pz.mongodb.net/Tamaringa", {useNewUrlParser: true})
+    .then(() => {
+        console.log("Connected to database!");
+    })
+    .catch(() => {
+        console.log("Connection to database failed");
+    });
 mongoose.set('useCreateIndex', true);
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
-  );
-  next();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PATCH, DELETE, OPTIONS"
+    );
+    next();
 });
 
 
@@ -41,7 +41,6 @@ app.use((req, res, next) => {
 // app.use((req, res, next) => {
 //   res.send('hello from express!');
 // });
-
 
 
 //move later to routes/users
@@ -60,60 +59,58 @@ app.use((req, res, next) => {
 
 //save user to the DB
 app.post("/api/user/signup", (req, res, next) => {
-  //once the hash func is done, we get the hash param and then inside the then block we create a new user
-  // bcrypt.hash(req.body.password, 10)
-  //   .then(hash => {
-      const user = new User({
-       // fullName: req.body.fullName,
+    //once the hash func is done, we get the hash param and then inside the then block we create a new user
+    // bcrypt.hash(req.body.password, 10)
+    //   .then(hash => {
+    const user = new User({
+        fullName: req.body.fullName,
         id: req.body.id,
-        //age: req.body.age,
-        //country: req.body.country,
+        age: req.body.age,
+        country: req.body.country,
         password: req.body.password,
-      });
-      user.save()
+    });
+    user.save()
         .then(result => {
-          console.log(result);
-          res.status(201).json({
-            message: 'User created!',
-            result: result //we send the result data so we can see what's inside there
-          });
+            console.log(result);
+            res.status(201).json({
+                message: 'User created!',
+                result: result //we send the result data so we can see what's inside there
+            });
         })
         .catch(err => {
-          console.log(err);
-          res.status(500).json({
-            error: err
-          });
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
         });
     // });
 });
 
 
-
 app.post("/api/user/login", (req, res, next) => {
-  User.findOne({ id: req.body.id })
-    .then(user => {
-    console.log(user);
-    if(!user) {
-      return res.status(401).json({
-        message: "Auth failed"
-      });
-    }
-    //return bycrypt.compare(req.body.password, user.password);
+    User.findOne({id: req.body.id})
+        .then(user => {
+            console.log(user);
+            if (!user) {
+                return res.status(401).json({
+                    message: "Auth failed"
+                });
+            }
+            //return bycrypt.compare(req.body.password, user.password);
 
-    //creates a new token based on some input data of your choice - in our case we'll use the id and the _id that MongoDB provides for us
-    const token = jwt.sign(
-        {id: user.id, userId: user._id},
-        'secret_this_should_be_longer',
-        { expiresIn: "1h" }
-      );
-      res.status(200).json({
-        token: token,
-        expiresIn: 3600
-      });
-      //console.log(res);
-  });
+            //creates a new token based on some input data of your choice - in our case we'll use the id and the _id that MongoDB provides for us
+            const token = jwt.sign(
+                {id: user.id, userId: user._id},
+                'secret_this_should_be_longer',
+                {expiresIn: "1h"}
+            );
+            res.status(200).json({
+                token: token,
+                expiresIn: 3600
+            });
+            //console.log(res);
+        });
 });
-
 
 
 module.exports = app;

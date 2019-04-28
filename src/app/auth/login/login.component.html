@@ -29,25 +29,31 @@
         </mat-form-field>
 
         <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">Login</button>
+
+        <!-- <a routerLink="/admin"><input type="submit" class="fadeIn fourth" value="אדמין"></a> -->
+
         <mat-spinner *ngIf="isLoading"></mat-spinner>
+
+        <!-- Remind Passowrd -->
+        <div id="formFooter">
+          <a class="underlineHover" href="#">?שכחת סיסמה</a>
+        </div>
+
       </form>
     </mat-card>
 
 <!-- ============================================================ -->
 
-    <!-- Login Form -->
-    <form>
-      <input type="text" id="login" class="fadeIn second" name="login" placeholder="תעודת זהות">
-      <input type="password" id="password" class="fadeIn third" name="login" placeholder="סיסמה">
-      <a routerLink="/user"><input type="submit" class="fadeIn fourth" value="התחבר"></a>
+    <!--&lt;!&ndash; Login Form &ndash;&gt;-->
+    <!--<form>-->
+      <!--<input type="text" id="login" class="fadeIn second" name="login" placeholder="תעודת זהות">-->
+      <!--<input type="password" id="password" class="fadeIn third" name="login" placeholder="סיסמה">-->
+      <!--<a routerLink="/user"><input type="submit" class="fadeIn fourth" value="התחבר"></a>-->
 
-      <a routerLink="/admin"><input type="submit" class="fadeIn fourth" value="אדמין"></a>
-    </form>
+      <!--<a routerLink="/admin"><input type="submit" class="fadeIn fourth" value="אדמין"></a>-->
+    <!--</form>-->
 
-    <!-- Remind Passowrd -->
-    <div id="formFooter">
-      <a class="underlineHover" href="#">?שכחת סיסמה</a>
-    </div>
+
 
   </div>
 </div>
