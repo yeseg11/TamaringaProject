@@ -1,0 +1,40 @@
+<div class="example-container">
+  <p>יצירת מחקר חדש</p>
+  <mat-form-field>
+    <input matInput placeholder="שם המחקר">
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput placeholder="מספר מזהה למחקר"></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>משתתפי המחקר</mat-label>
+    <mat-select [formControl]="toppings" multiple>
+      <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput placeholder="אופן מהלך המחקר"></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput placeholder="משתני המחקר"></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="start" placeholder="תחילת מחקר">
+    <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+    <mat-datepicker #start></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="end" placeholder="סוף מחקר">
+    <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+    <mat-datepicker #end></mat-datepicker>
+  </mat-form-field>
+
+</div>
+
+<button class="create-research" mat-flat-button color="primary">הגדר מחקר</button>

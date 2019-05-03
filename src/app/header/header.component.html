@@ -16,6 +16,10 @@
       <a mat-button routerLink="/admin" routerLinkActive="mat-accent">Admin</a>
     </li>
 
+    <li>
+      <a mat-button routerLink="/researcher" routerLinkActive="mat-accent">Researcher</a>
+    </li>
+
     <li *ngIf="userIsAuthenticated">
       <button mat-button (click)="onLogout()">Logout</button>
     </li>

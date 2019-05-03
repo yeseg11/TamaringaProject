@@ -14,7 +14,7 @@ export class AuthService {
   // wrap a boolean because i don't really need the token in my other components - only in my interceptor
   private authStatusListener = new Subject<boolean>();
 
-  constructor(private http: HttpClient, private routher: Router) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   getToken() {
@@ -67,7 +67,7 @@ export class AuthService {
           console.log(expirationDate);
 
           // reach out to my router to navigate back to the home page
-          this.routher.navigate(['/user']);
+          this.router.navigate(['/user']);
         }
       });
   }
@@ -98,7 +98,7 @@ export class AuthService {
     this.clearAuthDta();
     clearTimeout(this.tokenTimer);
     // reach out to my router to navigate back to the home page
-    this.routher.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   private setAuthTimer(duration: number) {

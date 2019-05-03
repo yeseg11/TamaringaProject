@@ -1,0 +1,19 @@
+.example-container {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.example-container > * {
+  width: 40%;
+  margin: auto;
+  text-align: right;
+
+}
+
+.create-research{
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
