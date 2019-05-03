@@ -34,6 +34,7 @@ import { HeaderComponent } from './header/header.component';
 import { AuthGuard } from './auth/auth.guard';
 import { NewResearchComponent } from './researcher/new-research/new-research.component';
 import { ResearcherViewComponent } from './researcher/researcher-view/researcher-view.component';
+import { AddMusicComponent } from './music/add-music/add-music.component';
 
 // create routing
 // we use canActivate that we have implemented in auth.guard service for routes we want to protect
@@ -55,7 +56,8 @@ const appRoutes: Routes = [
     NewUserComponent,
     HeaderComponent,
     NewResearchComponent,
-    ResearcherViewComponent
+    ResearcherViewComponent,
+    AddMusicComponent
   ],
   imports: [
     BrowserModule,
@@ -73,6 +75,7 @@ const appRoutes: Routes = [
     MatSelectModule,
     MatToolbarModule,
     MatDatepickerModule,
+    MatProgressSpinnerModule,
     MatProgressSpinnerModule,
     MatNativeDateModule,
     ReactiveFormsModule
