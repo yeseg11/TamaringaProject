@@ -11,7 +11,6 @@ export class NewResearchComponent implements OnInit {
   toppings = new FormControl();
   toppingList: string[] = ['Yona', 'David', 'Miriam', 'Lea', 'Stella'];
   constructor(public researchService: ResearchService) { }
-
   ngOnInit() {
   }
 
@@ -26,7 +25,7 @@ export class NewResearchComponent implements OnInit {
     // this.isLoading = true; not working
     this.researchService.createResearch(form.value.name,
                                         form.value.id,
-                                        form.value.participants,
+                                        // form.value.participants,
                                         form.value.process,
                                         form.value.variables,
                                         form.value.startDate,

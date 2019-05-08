@@ -16,7 +16,8 @@ import { MatInputModule,
          MatSelectModule,
          MatToolbarModule,
          MatProgressSpinnerModule,
-         MatNativeDateModule
+         MatNativeDateModule,
+         MatExpansionModule
        } from '@angular/material';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
@@ -35,7 +36,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { NewResearchComponent } from './researcher/new-research/new-research.component';
 import { ResearcherViewComponent } from './researcher/researcher-view/researcher-view.component';
 import { AddMusicComponent } from './music/add-music/add-music.component';
-
+import {ResearchListComponent} from './researcher/research-list/research-list.component';
 // create routing
 // we use canActivate that we have implemented in auth.guard service for routes we want to protect
 const appRoutes: Routes = [
@@ -45,6 +46,8 @@ const appRoutes: Routes = [
   { path: 'admin/new-user', component: NewUserComponent, canActivate: [AuthGuard] },
   { path: 'researcher', component: ResearcherViewComponent },
   { path: 'researcher/new-research', component: NewResearchComponent },
+  { path: 'add-music', component: AddMusicComponent },
+
 ];
 
 @NgModule({
@@ -57,7 +60,8 @@ const appRoutes: Routes = [
     HeaderComponent,
     NewResearchComponent,
     ResearcherViewComponent,
-    AddMusicComponent
+    AddMusicComponent,
+    ResearchListComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +82,8 @@ const appRoutes: Routes = [
     MatProgressSpinnerModule,
     MatProgressSpinnerModule,
     MatNativeDateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatExpansionModule
   ],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app

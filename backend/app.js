@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const User = require("./models/users");
 const jwt = require('jsonwebtoken');
 const checkAuth = require("./middleware/check-auth"); //just pass the refernce to that funtion (and not execute) and Express will execute for us
+const Research = require("./models/research");
 
 const app = express();
 
@@ -112,5 +113,33 @@ app.post("/api/user/login", (req, res, next) => {
         });
 });
 
+app.post("/api/researcher/new-research", (req, res, next) => {
+  console.log("id1: ", req.body.id);
+  const research = new Research({
+    name: req.body.name,
+    id: req.body.id,
+    // participants: req.body.participants,
+    process: req.body.process,
+    variables: req.body.variables,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate,
+  });
+  research.save()
+    .then(result => {
+      console.log(result);
+      console.log("id2: ", req.body.id);
+      res.status(201).json({
+        message: 'Research created!',
+        result: result //we send the result data so we can see what's inside there
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+  // });
+});
 
 module.exports = app;

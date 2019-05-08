@@ -1,7 +1,7 @@
 export interface ResearchData {
   name: string;
   id: number;
-  participants: Array<string>;
+  // participants: string;
   process: string;
   variables: string;
   startDate: Date;

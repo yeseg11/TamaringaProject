@@ -1,4 +1,5 @@
 <!--<div class="example-container">-->
+<mat-card >
 
   <form class="example-container" (submit)="onAddResearch(addResearchForm)" #addResearchForm="ngForm">
     <p>יצירת מחקר חדש</p>
@@ -8,16 +9,19 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput name="id" ngModel type="number" placeholder="מספר מזהה למחקר" #idInput="ngModel" required id>
+      <input matInput name="id" ngModel type="number" placeholder="מספר מזהה למחקר" #idInput="ngModel" required>
       <mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>משתתפי המחקר</mat-label>
-      <mat-select id="participants" name="participants" [formControl]="toppings" multiple [(ngModel)]="participants" required>
-        <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+
+    <!--<mat-form-field>-->
+      <!--<mat-label>Toppings</mat-label>-->
+      <!--<mat-select name="participants" [formControl]="toppings" multiple>-->
+        <!--<mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}} </mat-option>-->
+      <!--</mat-select>-->
+    <!--</mat-form-field>-->
+
+
 
     <mat-form-field>
       <textarea name="process" ngModel type="text" matInput placeholder="אופן מהלך המחקר" #idInput="ngModel" required></textarea>
@@ -43,9 +47,8 @@
       <mat-error *ngIf="idInput.invalid">Please select an end date.</mat-error>
     </mat-form-field>
 
+    <button class="create-research" mat-flat-button color="primary">הגדר מחקר</button>
 
   </form>
 
-<!--</div>-->
-
-<button class="create-research" mat-flat-button color="primary">הגדר מחקר</button>
+</mat-card>

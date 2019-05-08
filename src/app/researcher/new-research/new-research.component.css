@@ -1,7 +1,7 @@
 .example-container {
   display: flex;
   flex-direction: column;
-
+  /*border: 3px solid #cccccc;*/
 }
 
 .example-container > * {
@@ -22,3 +22,4 @@
   text-align: left;
 
 }
+

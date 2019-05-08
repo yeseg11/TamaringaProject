@@ -10,14 +10,14 @@ export class ResearchService {
   }
   createResearch(name: string,
                  id: number,
-                 participants: Array<string>,
+                 // participants: string,
                  process: string,
                  variables: string,
                  startDate: Date,
                  endDate: Date) {
     const researchData: ResearchData = {name: name,
                                         id: id,
-                                        participants: participants,
+                                        // participants: participants,
                                         process: process,
                                         variables: variables,
                                         startDate: startDate,
