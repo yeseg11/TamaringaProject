@@ -5,6 +5,7 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+//import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
 
 // import of Angular Material Components that used for project
 import { MatInputModule,
@@ -65,7 +66,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     MatSelectModule,
     MatToolbarModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+ //   NgxYoutubePlayerModule.forRoot()
   ],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app

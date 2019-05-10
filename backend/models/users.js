@@ -6,8 +6,12 @@ const userSchema = mongoose.Schema({
   fullName: { type: String, required: true},
   id: { type: Number, required: true},
   age: { type: Number, required: true},
+  year: { type: Number, required: true},
   password: { type: String, required: true},
-  country: { type: String, required: true}
+  country: { type: String, required: true},
+  entrances: Number,
+  group: String,
+  songs: []
   });
 
 //validate the unique option, before it saves it to database it will check for unique id
