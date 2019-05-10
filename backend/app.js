@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 // const bcrypt = require("bcrypt"); //move later to routes/users
 const User = require("./models/users");
+const Record = require("./models/records");
 const jwt = require('jsonwebtoken');
 const checkAuth = require("./middleware/check-auth"); //just pass the refernce to that funtion (and not execute) and Express will execute for us
 const Research = require("./models/research");
@@ -67,15 +68,31 @@ app.post("/api/user/signup", (req, res, next) => {
         fullName: req.body.fullName,
         id: req.body.id,
         age: req.body.age,
+        year: req.body.year,
         country: req.body.country,
         password: req.body.password,
+        group: req.body.country + req.body.year,
+        entrances: 0
     });
+    // let fetchedRecord;
+    // Record.findOne({year: 1990})
+    //     .then(record => {
+    //         console.log(record);
+    //         if (!record) {
+    //             return res.status(401).json({
+    //                 message: "Find record failed"
+    //             });
+    //         }
+    //         fetchedRecord = record;
+    //         return fetchedRecord;
+    //     });
     user.save()
         .then(result => {
             console.log(result);
             res.status(201).json({
                 message: 'User created!',
-                result: result //we send the result data so we can see what's inside there
+                user: result //we send the result data so we can see what's inside there
+                // record: fetchedRecord
             });
         })
         .catch(err => {
@@ -86,32 +103,86 @@ app.post("/api/user/signup", (req, res, next) => {
         });
     // });
 });
+// ======================test login==========================
 
-
-app.post("/api/user/login", (req, res, next) => {
-    User.findOne({id: req.body.id})
-        .then(user => {
-            console.log(user);
-            if (!user) {
-                return res.status(401).json({
-                    message: "Auth failed"
-                });
-            }
-            //return bycrypt.compare(req.body.password, user.password);
-
-            //creates a new token based on some input data of your choice - in our case we'll use the id and the _id that MongoDB provides for us
-            const token = jwt.sign(
-                {id: user.id, userId: user._id},
-                'secret_this_should_be_longer',
-                {expiresIn: "1h"}
-            );
-            res.status(200).json({
-                token: token,
-                expiresIn: 3600
-            });
-            //console.log(res);
+app.post("/api/user/login", async(req, res) => {
+    const user = await User.findOne({id: req.body.id});
+    console.log(user);
+    if (!user) {
+        return res.status(401).json({
+            message: "Auth failed"
         });
+    }
+
+    const record = await Record.find({year: {$gt: user.year - 3, $lt: user.year + 3}}).limit(20);
+    console.log(record);
+    if (!record) {
+        return res.status(401).json({
+            message: "Find record failed"
+        });
+    }
+
+    const token = jwt.sign(
+        {id: user.id, userId: user._id},
+        'secret_this_should_be_longer',
+        {expiresIn: "1h"}
+    );
+
+    res.status(200).json({
+        token: token,
+        expiresIn: 3600,
+        record: record
+    });
 });
+
+// ==========================================================
+// app.post("/api/user/login", (req, res, next) => {
+//     //console.log(user);
+//     User.findOne({id: req.body.id})
+//         .then(user => {
+//             console.log(user);
+//             if (!user) {
+//                 return res.status(401).json({
+//                     message: "Auth failed"
+//                 });
+//             }
+//             //return bycrypt.compare(req.body.password, user.password);
+//
+//             //creates a new token based on some input data of your choice - in our case we'll use the id and the _id that MongoDB provides for us
+//             const token = jwt.sign(
+//                 {id: user.id, userId: user._id},
+//                 'secret_this_should_be_longer',
+//                 {expiresIn: "1h"}
+//             );
+//             res.status(200).json({
+//                 token: token,
+//                 expiresIn: 3600
+//             });
+//             //console.log(res);
+//         });
+// });
+
+/** ----------------------------------------------------------------------------------
+ * Return the top records of the given year between 2 year before and 2 years after
+ *
+ * @PARAM {String} year: The user 20's year
+ * @PARAM {String} country: The user country
+ *
+ * @RESPONSE {json}
+ * @RESPONSE-SAMPLE {docs: []}
+ ----------------------------------------------------------------------------------
+app.get('/mb/track/recording/:year/:country', function (req, res, next) {
+    db().then(() => {
+        Records.find({
+            year: {$gt: parseInt(req.params.year) - 3, $lt: parseInt(req.params.year) + 3},
+            country: req.params.country
+        }).sort({'youtube.views': -1}).limit(30).exec(function (err, docs) {
+            if (err) return next(err);       //the data we get sorted from the bigest views number to the smalll ones and limit to 10 top .
+            res.status(200).json({err: false, items: [].concat(docs)});
+        })
+    }).catch(next);
+});
+*/
 
 app.post("/api/researcher/new-research", (req, res, next) => {
   console.log("id1: ", req.body.id);
@@ -143,3 +214,4 @@ app.post("/api/researcher/new-research", (req, res, next) => {
 });
 
 module.exports = app;
+

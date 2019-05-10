@@ -5,6 +5,7 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+//import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
 
 // import of Angular Material Components that used for project
 import { MatInputModule,
@@ -19,7 +20,6 @@ import { MatInputModule,
          MatNativeDateModule,
          MatExpansionModule
        } from '@angular/material';
-import {MatDatepickerModule} from '@angular/material/datepicker';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
@@ -76,6 +76,7 @@ const appRoutes: Routes = [
     MatTabsModule,
     MatDialogModule,
     FormsModule,
+    ReactiveFormsModule,
     MatSelectModule,
     MatToolbarModule,
     MatDatepickerModule,
@@ -83,7 +84,8 @@ const appRoutes: Routes = [
     MatProgressSpinnerModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    MatExpansionModule
+    MatExpansionModule,
+//  NgxYoutubePlayerModule.forRoot()
   ],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app

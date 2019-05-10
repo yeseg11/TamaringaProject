@@ -20,9 +20,25 @@ export class NewUserComponent {
       console.log('invalid form');
       return;
     }
+    // ====================================================
+
+    // find the year that the user was in his twenties
+    const twentiesAge = (new Date()).getFullYear() - form.value.age + 20;
+    // console.log(twentiesAge);
+    //
+    // let recList: any[];
+    // recList = ['1', '2'];
+    // console.log(recList);
+
+    // this.authService.getUserData(twentiesAge, form.value.country);
+
+
+
+    // ====================================================
+
     // set the spinner loading to true
     // this.isLoading = true; not working
-    this.authService.createUser(form.value.fullName, form.value.id, form.value.age, form.value.password, form.value.country);
+    this.authService.createUser(form.value.fullName, form.value.id, form.value.age, twentiesAge, form.value.password, form.value.country);
     console.log('server: createUser()');
     // form.resetForm();
   }

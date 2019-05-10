@@ -4,6 +4,7 @@ export interface AuthData {
   fullName: string;
   country: string;
   age: number;
+  year: number;
 }
 
 export interface AuthDataLogin {
