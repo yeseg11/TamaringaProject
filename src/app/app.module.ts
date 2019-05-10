@@ -5,21 +5,22 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-//import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
+// import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
 
 // import of Angular Material Components that used for project
-import { MatInputModule,
-         MatCardModule,
-         MatRadioModule,
-         MatButtonModule,
-         MatTabsModule,
-         MatDialogModule,
-         MatSelectModule,
-         MatToolbarModule,
-         MatProgressSpinnerModule,
-         MatNativeDateModule,
-         MatExpansionModule
-       } from '@angular/material';
+import {
+  MatInputModule,
+  MatCardModule,
+  MatRadioModule,
+  MatButtonModule,
+  MatTabsModule,
+  MatDialogModule,
+  MatSelectModule,
+  MatToolbarModule,
+  MatProgressSpinnerModule,
+  MatNativeDateModule,
+  MatExpansionModule, MatDatepickerModule
+} from '@angular/material';
 
 // Routing
 import { AppRoutingModule } from './app-routing.module';
