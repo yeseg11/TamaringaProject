@@ -4,10 +4,6 @@
   </span>
   <span class="spacer"></span>
   <ul>
-    <li *ngIf="!userIsAuthenticated">
-      <a mat-button routerLink="/signup" routerLinkActive="mat-accent">Signup</a>
-    </li>
-
     <li *ngIf="userIsAuthenticated">
       <a mat-button routerLink="/user" routerLinkActive="mat-accent">My Playlist</a>
     </li>

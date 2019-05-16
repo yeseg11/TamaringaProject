@@ -4,14 +4,17 @@
   <form class="example-container" (submit)="onAddResearch(addResearchForm)" #addResearchForm="ngForm">
     <p>יצירת מחקר חדש</p>
     <mat-form-field>
-      <input matInput name="name" ngModel type="text" placeholder="שם המחקר" #idInput="ngModel" required>
-      <mat-error *ngIf="idInput.invalid">Please enter a name.</mat-error>
+      <input
+        matInput
+        type="text"
+        name="name"
+        ngModel
+        placeholder="שם המחקר"
+        required
+        #name="ngModel">
+      <mat-error *ngIf="name.invalid">Please enter a name.</mat-error>
     </mat-form-field>
-
-    <mat-form-field>
-      <input matInput name="id" ngModel type="number" placeholder="מספר מזהה למחקר" #idInput="ngModel" required>
-      <mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>
-    </mat-form-field>
+    <!--#idInput="ngModel"-->
 
 
     <!--<mat-form-field>-->
@@ -24,31 +27,74 @@
 
 
     <mat-form-field>
-      <textarea name="process" ngModel type="text" matInput placeholder="אופן מהלך המחקר" #idInput="ngModel" required></textarea>
-      <mat-error *ngIf="idInput.invalid">Please enter a valid process.</mat-error>
+      <textarea
+        matInput
+        type="text"
+        name="process"
+        ngModel
+        placeholder="אופן מהלך המחקר"
+        required
+        #process="ngModel">
+      </textarea>
+      <mat-error *ngIf="process.invalid">Please enter a valid process.</mat-error>
     </mat-form-field>
+    <!--#idInput="ngModel" &#45;&#45; shouold be inside the input of process-->
 
     <mat-form-field>
-      <textarea name="variables" ngModel type="text" matInput placeholder="משתני המחקר" #idInput="ngModel" required></textarea>
-      <mat-error *ngIf="idInput.invalid">Please enter a valid variables.</mat-error>
+      <textarea
+        matInput
+        type="text"
+        name="variables"
+        ngModel
+        placeholder="משתני המחקר"
+        required
+        #variables="ngModel">
+      </textarea>
+      <mat-error *ngIf="variables.invalid">Please enter a valid variables.</mat-error>
     </mat-form-field>
+    <!--#idInput="ngModel"-->
+
 
     <mat-form-field>
-      <input class="dates" name="startDate" ngModel matInput [matDatepicker]="start" placeholder="תחילת מחקר" #idInput="ngModel" required>
+      <input
+        matInput
+        class="dates"
+        name="startDate"
+        ngModel
+        [matDatepicker]="start"
+        placeholder="תחילת מחקר"
+        required
+        #startDate="ngModel">
       <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
       <mat-datepicker #start></mat-datepicker>
-      <mat-error *ngIf="idInput.invalid">Please select a start date</mat-error>
+      <mat-error *ngIf="startDate.invalid">Please select a start date</mat-error>
     </mat-form-field>
+    <!--#idInput="ngModel"-->
+
 
     <mat-form-field >
-      <input class="dates" name="endDate" ngModel matInput [matDatepicker]="end" placeholder="סוף מחקר" #idInput="ngModel" required>
+      <input
+        matInput
+        class="dates"
+        name="endDate"
+        ngModel
+        [matDatepicker]="end"
+        placeholder="סוף מחקר"
+        required
+        #endDate="ngModel">
       <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
       <mat-datepicker #end></mat-datepicker>
-      <mat-error *ngIf="idInput.invalid">Please select an end date.</mat-error>
+      <mat-error *ngIf="endDate.invalid">Please select an end date.</mat-error>
     </mat-form-field>
+    <!--#idInput="ngModel" -->
 
-    <button class="create-research" mat-flat-button color="primary">הגדר מחקר</button>
+
+
+    <button
+      class="create-research"
+      mat-flat-button
+      color="primary"
+      type="submit">הגדר מחקר</button>
 
   </form>
-
 </mat-card>

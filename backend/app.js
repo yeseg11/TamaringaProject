@@ -35,6 +35,18 @@ app.use((req, res, next) => {
     next();
 });
 
+// app.use("/api/researcher/new-research", (req, res, next) => {
+//   const researches = [
+//     {
+//       name: "yona",
+//       id: "1234",
+//       // participants: req.body.participants,
+//       process: "yona halimi milstein",
+//       variables: "yonyon",
+//       startDate: "25/4/70",
+//       endDate: "25/4/90",
+//     }]
+// });
 
 // app.use((req, res, next) => {
 //   console.log('first middleware');
@@ -184,6 +196,15 @@ app.get('/mb/track/recording/:year/:country', function (req, res, next) {
 });
 */
 
+/** -------------------------------------------------------------------------
+ * Add a new research to the database
+ * @PARAM {String*} id: Given research id
+ * @PARAM {String*} name: Given research name
+ * @PARAM {String*} process: Given research process
+ * @PARAM {String*} variables: Given research variables
+ * @PARAM {Date*} startDate: Given research startDate
+ * @PARAM {Date*} endDate: Given research endDate
+ */
 app.post("/api/researcher/new-research", (req, res, next) => {
   console.log("id1: ", req.body.id);
   const research = new Research({
@@ -211,6 +232,33 @@ app.post("/api/researcher/new-research", (req, res, next) => {
       });
     });
   // });
+});
+
+/** -------------------------------------------------------------------------
+ * Return an object of all the researches
+ *  @PARAM {Object*} researches: researches array
+ */
+app.get("/api/researcher/new-research", (req, res, next) => {
+  Research.find().then(documents => {
+    console.log(documents);
+    console.log('type:' + typeof(documents));
+      res.status(200).json({
+        message: "Researches fetched successfully",
+        researches: documents
+      });
+    });
+
+});
+
+/** -------------------------------------------------------------------------
+ * Delete a specific research by ID
+ *  @PARAM {String*} _id: Given research id
+ */
+app.delete("/api/researcher/new-research/:id", (req, res, next) => {
+  Research.deleteOne({_id: req.params.id}).then(result => {
+    console.log(result);
+    res.status(200).json({ message: "Research deleted"});
+  })
 });
 
 module.exports = app;

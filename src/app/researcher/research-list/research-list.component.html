@@ -1,0 +1,19 @@
+<mat-accordion multi="true" *ngIf="researches.length > 0"> <!--multi="true" - we can open more than one expansion-->
+<!--<mat-accordion multi="true" >-->
+  <mat-expansion-panel *ngFor="let research of researches">
+    <mat-expansion-panel-header>
+      {{ research.name }}
+    </mat-expansion-panel-header>
+    <p>{{ research.process }}</p>
+    <p>{{ research.variables }}</p>
+    <p>{{ research.startDate }}</p>
+    <p>{{ research.endDate }}</p>
+    <mat-action-row>
+      <button mat-button color="primary">EDIT</button>
+      <button mat-button color="warn" (click)="onDelete(research.id)">DELETE</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<p class="info-text "*ngIf="researches.length <=0">לא קיימים מחקרים עדיין!</p>
+<!--<p class="info-text" *ngIf="researches.length <=0">לא קיימים מחקרים עדיין!</p>-->
+<!--<p class="info-text">לא קיימים מחקרים עדיין!</p>-->
