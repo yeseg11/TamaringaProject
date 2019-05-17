@@ -35,18 +35,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use("/api/researcher/new-research", (req, res, next) => {
-//   const researches = [
-//     {
-//       name: "yona",
-//       id: "1234",
-//       // participants: req.body.participants,
-//       process: "yona halimi milstein",
-//       variables: "yonyon",
-//       startDate: "25/4/70",
-//       endDate: "25/4/90",
-//     }]
-// });
 
 // app.use((req, res, next) => {
 //   console.log('first middleware');
@@ -110,7 +98,7 @@ app.post("/api/user/signup", (req, res, next) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                error: err
+                message: "Invalid authentication credentials!"
             });
         });
     // });
@@ -122,13 +110,19 @@ app.post("/api/user/login", async(req, res) => {
     console.log(user);
     if (!user) {
         return res.status(401).json({
-            message: "Auth failed"
+            message: "User is not found!"
+        });
+    }
+    if (user.password != req.body.password ) {
+        return res.status(401).json({
+            message: "Invalid authentication credentials!"
         });
     }
 
-    const record = await Record.find({year: {$gt: user.year - 3, $lt: user.year + 3}}).limit(20);
-    console.log(record);
-    if (!record) {
+
+    const records = await Record.find({year: {$gt: user.year - 3, $lt: user.year + 3}}).limit(20);
+    // console.log(records);
+    if (!records) {
         return res.status(401).json({
             message: "Find record failed"
         });
@@ -143,7 +137,8 @@ app.post("/api/user/login", async(req, res) => {
     res.status(200).json({
         token: token,
         expiresIn: 3600,
-        record: record
+        records: records,
+        userID: user._id
     });
 });
 
@@ -173,28 +168,6 @@ app.post("/api/user/login", async(req, res) => {
 //             //console.log(res);
 //         });
 // });
-
-/** ----------------------------------------------------------------------------------
- * Return the top records of the given year between 2 year before and 2 years after
- *
- * @PARAM {String} year: The user 20's year
- * @PARAM {String} country: The user country
- *
- * @RESPONSE {json}
- * @RESPONSE-SAMPLE {docs: []}
- ----------------------------------------------------------------------------------
-app.get('/mb/track/recording/:year/:country', function (req, res, next) {
-    db().then(() => {
-        Records.find({
-            year: {$gt: parseInt(req.params.year) - 3, $lt: parseInt(req.params.year) + 3},
-            country: req.params.country
-        }).sort({'youtube.views': -1}).limit(30).exec(function (err, docs) {
-            if (err) return next(err);       //the data we get sorted from the bigest views number to the smalll ones and limit to 10 top .
-            res.status(200).json({err: false, items: [].concat(docs)});
-        })
-    }).catch(next);
-});
-*/
 
 /** -------------------------------------------------------------------------
  * Add a new research to the database
@@ -228,7 +201,7 @@ app.post("/api/researcher/new-research", (req, res, next) => {
     .catch(err => {
       console.log(err);
       res.status(500).json({
-        error: err
+        message: 'Creating a research failed!'
       });
     });
   // });

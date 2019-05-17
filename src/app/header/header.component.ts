@@ -11,13 +11,16 @@ import { AuthService } from '../auth/auth.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   userIsAuthenticated = false;
+  adminAuthenticated = false;
   private authListenerSubs: Subscription;
+  private adminAuthListenerSubs: Subscription;
 
   constructor(private authService: AuthService) {}
 
   // set up the subscription of AuthStatusListener
   ngOnInit() {
     this.userIsAuthenticated = this.authService.getIsAuth();
+    this.adminAuthenticated = this.authService.getIsAdmin();
 
     this.authListenerSubs = this.authService
     .getAuthStatusListener()
@@ -25,7 +28,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       // once the user loged in with right credantials the boolean condition will change - reflect on what the user will see
       this.userIsAuthenticated = isAuthenticated;
     });
+
+    this.adminAuthListenerSubs = this.authService
+        .getAdminAuthStatusListener()
+        .subscribe(isAuthenticated => {
+          this.adminAuthenticated = isAuthenticated;
+        });
   }
+
   // Should clear the token and inform all interested parts on the page about changed athentication status.
   // implemented in auth service
   onLogout() {

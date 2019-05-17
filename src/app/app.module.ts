@@ -5,7 +5,6 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-// import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
 
 // import of Angular Material Components that used for project
 import {
@@ -19,7 +18,8 @@ import {
   MatToolbarModule,
   MatProgressSpinnerModule,
   MatNativeDateModule,
-  MatExpansionModule, MatDatepickerModule
+  MatExpansionModule,
+  MatDatepickerModule,
 } from '@angular/material';
 
 // Routing
@@ -37,7 +37,10 @@ import { AuthGuard } from './auth/auth.guard';
 import { NewResearchComponent } from './researcher/new-research/new-research.component';
 import { ResearcherViewComponent } from './researcher/researcher-view/researcher-view.component';
 import { AddMusicComponent } from './music/add-music/add-music.component';
+import {ErrorInterceptor} from './error-interceptor';
+import {ErrorComponent} from './error/error.component';
 import {ResearchListComponent} from './researcher/research-list/research-list.component';
+
 // create routing
 // we use canActivate that we have implemented in auth.guard service for routes we want to protect
 const appRoutes: Routes = [
@@ -62,6 +65,7 @@ const appRoutes: Routes = [
     NewResearchComponent,
     ResearcherViewComponent,
     AddMusicComponent,
+    ErrorComponent,
     ResearchListComponent
   ],
   imports: [
@@ -86,13 +90,15 @@ const appRoutes: Routes = [
     MatNativeDateModule,
     ReactiveFormsModule,
     MatExpansionModule,
-//  NgxYoutubePlayerModule.forRoot()
   ],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app
     MatDatepickerModule,
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  // simply informs Angular that this component is going to get used, even through Angular cant't see it
+  entryComponents: [ErrorComponent]
 })
 export class AppModule { }

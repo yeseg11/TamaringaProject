@@ -6,6 +6,6 @@ module.exports = (req, res, next) => {
     jwt.verify(token, "secret_this_should_be_longer"); //verufying the token with the secret string that used when token has created
     next();
   } catch (error) {
-    res.status(401).json({message: "Token Auth Failed" });
+    res.status(401).json({message: "You are not authenticated!" });
   }
 };
