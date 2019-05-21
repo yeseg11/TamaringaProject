@@ -1,0 +1,17 @@
+/*.container{*/
+  /*display: flex;*/
+  /*flex-direction: row;*/
+/*}*/
+
+.videos {
+  display: flex;
+}
+
+.rating {
+  display: flex;
+  flex-direction: column;
+}
+
+/*.example-radio-button {*/
+  /*margin: 5px;*/
+/*}*/

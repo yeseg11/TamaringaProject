@@ -5,6 +5,7 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 // import of Angular Material Components that used for project
 import {
@@ -40,19 +41,11 @@ import { AddMusicComponent } from './music/add-music/add-music.component';
 import {ErrorInterceptor} from './error-interceptor';
 import {ErrorComponent} from './error/error.component';
 import {ResearchListComponent} from './researcher/research-list/research-list.component';
+import {CommonModule} from '@angular/common';
+import { MusicListComponent } from './user/music-list/music-list.component';
+import {MatIconModule} from '@angular/material/icon';
 
-// create routing
-// we use canActivate that we have implemented in auth.guard service for routes we want to protect
-const appRoutes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'user', component: UserViewComponent, canActivate: [AuthGuard] },
-  { path: 'admin', component: AdminViewComponent, canActivate: [AuthGuard] },
-  { path: 'admin/new-user', component: NewUserComponent, canActivate: [AuthGuard] },
-  { path: 'researcher', component: ResearcherViewComponent },
-  { path: 'researcher/new-research', component: NewResearchComponent },
-  { path: 'add-music', component: AddMusicComponent },
 
-];
 
 @NgModule({
   declarations: [
@@ -66,12 +59,12 @@ const appRoutes: Routes = [
     ResearcherViewComponent,
     AddMusicComponent,
     ErrorComponent,
-    ResearchListComponent
+    ResearchListComponent,
+    MusicListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
     MatInputModule,
     MatCardModule,
@@ -90,6 +83,9 @@ const appRoutes: Routes = [
     MatNativeDateModule,
     ReactiveFormsModule,
     MatExpansionModule,
+    CommonModule,
+    MatButtonToggleModule,
+    MatIconModule,
   ],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app

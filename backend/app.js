@@ -195,7 +195,7 @@ app.post("/api/researcher/new-research", (req, res, next) => {
       console.log("id2: ", req.body.id);
       res.status(201).json({
         message: 'Research created!',
-        result: result //we send the result data so we can see what's inside there
+        researchId: result._id //we send the result data so we can see what's inside there
       });
     })
     .catch(err => {

@@ -48,6 +48,10 @@ export class ResearchService {
     return this.researchesUpdated.asObservable();
   }
 
+  getResearch(id: string) {
+    return {...this.researches.find(r => r.id === id)};
+  }
+
   /** -------------------------------------------------------------------------
    * Add a new research to the database
    * @PARAM {String*} id: Given research id
@@ -72,17 +76,14 @@ export class ResearchService {
                                         variables: variables,
                                         startDate: startDate,
                                         endDate: endDate};
-    // add the new research to the researches array
-    this.researches.push(researchData);
-    // update the array
-    this.researchesUpdated.next([...this.researches]);
-    // send the data to the database
-    this.http.post('http://localhost:3000/api/researcher/new-research', researchData)
+    this.http.post<{ message: string, researchId: string}>('http://localhost:3000/api/researcher/new-research', researchData)
       .subscribe(response => {
-        console.log('response from server: ');
-        console.log(response);
-        console.log('type:' + typeof(response));
-        console.log('research created');
+        const researchId = response.researchId;
+        researchData.id = researchId;
+        // add the new research to the researches array
+        this.researches.push(researchData);
+        // update the array
+        this.researchesUpdated.next([...this.researches]);
       });
     // add the research to an array of researches like in Maximillian video
   }

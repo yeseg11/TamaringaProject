@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { ResearchData } from '../research-data.model';
 import { ResearchService } from '../research.service';
 import { Subscription } from 'rxjs';
@@ -9,12 +9,14 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./research-list.component.css']
 })
 export class ResearchListComponent implements OnInit , OnDestroy {
+  @Output() myEvent = new EventEmitter();
   researches: ResearchData[] = [];
   private researchesSub: Subscription;
   // public: create a property researchesService, and store the incoming
   // researchesService into it
   constructor(public researchesService: ResearchService) {
   }
+
   ngOnInit(): void {
     this.researchesService.getResearches();
     this.researchesSub = this.researchesService.getResearchesUpdateListener()
@@ -27,6 +29,7 @@ export class ResearchListComponent implements OnInit , OnDestroy {
    * Delete a research
    * @PARAM {String*} researchId: Given research id
    */
+
   onDelete(researchId: string) {
     this.researchesService.deleteResearch(researchId);
 
