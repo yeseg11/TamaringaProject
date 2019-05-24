@@ -1,8 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AuthData, AuthDataLogin} from './auth-data.model';
-import {Subject} from 'rxjs';
+import {Subject, BehaviorSubject} from 'rxjs';
 import {Router} from '@angular/router';
+import { environment } from '../../environments/environment';
+import {computeStyle} from '@angular/animations/browser/src/util';
+
+const BACKEND_URL = environment.apiUrl;
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -12,11 +16,18 @@ export class AuthService {
     private records: string[] = [];
     private token: string;
     private tokenTimer: any;
+    private adminFlag = false;
+
+    private playlistSource = new BehaviorSubject(null);
+    currentPlaylist = this.playlistSource.asObservable();
+
     // that will actually be a new subject imported from rxjs and i'll use that subject
     // to push the authentication information to the components which are interested.
     // wrap a boolean because i don't really need the token in my other components - only in my interceptor
     private authStatusListener = new Subject<boolean>();
     private adminAuthStatusListener = new Subject<boolean>();
+    private loadingListener = new Subject<boolean>();
+    // private loadingListener = new Subject<boolean>();
 
     constructor(private http: HttpClient, private router: Router) {
     }
@@ -47,34 +58,38 @@ export class AuthService {
         return this.adminAuthStatusListener.asObservable();
     }
 
+    getLoadingStatusListener() {
+        return this.loadingListener.asObservable();
+    }
+
 
     createUser(fullName: string, id: number, age: number, year: number, password: string, country: string) {
         const authData: AuthData = {fullName, id, age, year, password, country};
-        this.http.post('http://localhost:3000/api/user/signup', authData)
+        this.http.post(BACKEND_URL + '/user/signup', authData)
             .subscribe(response => {
                 console.log('response from server: ');
                 console.log(response);
             } , error => {
                 console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
-                this.authStatusListener.next(false);
+                this.loadingListener.next(false);
             });
     }
 
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
-        this.http.post<{ token: string, expiresIn: number, userID: string, records }>
-        ('http://localhost:3000/api/user/login', authDataLogin)
+        this.http.post<{ token: string, expiresIn: number, userID: string, playlist }>
+        (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
-                // console.log(response);
-
-                const recRes = response.records;
-                // dismantle the records Object into string array of videoId
-                for (const rec of recRes) {
-                    this.records.push(rec.youtube.videoId);
-                }
-                // console.log(this.records);
+                // console.log(typeof (response.playlist));
+                this.updatePlaylist(response.playlist);
+                // const recRes = response.records;
+                // // dismantle the records Object into string array of videoId
+                // for (const rec of recRes) {
+                //     this.records.push(rec.youtube.videoId);
+                // }
+                // console.log(recRes);
 
                 // we'll actually get back a response object which has token field which is of type string (as we created in the API)
                 const token = response.token;
@@ -88,26 +103,48 @@ export class AuthService {
                     console.log('expires in duration: ', expiresInDuration);
 
                     this.isAuthenticated = true;
+                    this.isAdminAuthenticated = true;
+
                     this.authStatusListener.next(true);
+                    this.loadingListener.next(true);
 
                     if (response.userID === this.test) {
+
+                        this.adminFlag = true;
+                        localStorage.setItem('admin', String(this.adminFlag));
+
                         this.isAdminAuthenticated = true;
                         this.adminAuthStatusListener.next(true);
                     }
+                    console.log(this.adminFlag);
 
                     const now = new Date();
                     const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
                     this.saveAuthData(token, expirationDate);
                     console.log('expiration date: ', expirationDate);
 
-                    // reach out to my router to navigate back to the home page
-                    this.router.navigate(['/user']);
+                    if (this.adminFlag) {
+                        this.router.navigate(['/admin']);
+                    } else {
+                        // reach out to my router to navigate back to the home page
+                        this.router.navigate(['/user']);
+                    }
                 }
             } , error => {
                 console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
                 this.authStatusListener.next(false);
+                this.loadingListener.next(false);
             });
+    }
+    // update the playlist Object, called once when user logged in, music-list is listening on any change in playlist
+    updatePlaylist(playlist: any) {
+        // const arrPlaylist = playlist;
+        // // dismantle the records Object into string array of videoId
+        // for (const rec of arrPlaylist) {
+        //     this.records.push(rec.youtube.videoId);
+        // }
+        this.playlistSource.next(playlist);
     }
 
     autoUserAuth() {
@@ -122,6 +159,14 @@ export class AuthService {
         if (expireIn > 0) {
             this.token = authInformation.token;
             this.isAuthenticated = true;
+
+            const admin = localStorage.getItem('admin');
+            if (admin) {
+                this.isAdminAuthenticated = true;
+            }
+
+            console.log(this.adminFlag);
+
             this.setAuthTimer(expireIn / 1000); // divide by 1000 because getTime() returns th time in ms
             this.authStatusListener.next(true);
             this.adminAuthStatusListener.next(true);
@@ -132,9 +177,11 @@ export class AuthService {
     logout() {
         this.token = null;
         this.isAuthenticated = false;
+        this.isAdminAuthenticated = false;
+        this.adminFlag = false;
         // pass that information to anyone who is interested
-        this.authStatusListener.next(false); // false becuase the user in now not authenticated anymore
-        this.adminAuthStatusListener.next(false); // false becuase the user in now not authenticated anymore
+        this.authStatusListener.next(false); // false because the user in now not authenticated anymore
+        this.adminAuthStatusListener.next(false);
         this.clearAuthDta();
         clearTimeout(this.tokenTimer);
         // reach out to my router to navigate back to the home page
@@ -161,6 +208,7 @@ export class AuthService {
     private clearAuthDta() {
         localStorage.removeItem('token');
         localStorage.removeItem('expiration');
+        localStorage.removeItem('admin');
     }
 
     // get my data from the local storage
