@@ -12,7 +12,7 @@ export class UserViewComponent implements OnInit {
 
   // favoriteSeason: string;
   // seasons: string[] = ['5', '4', '3', '2', '1'];
-  // private records: string[] = [];
+   public records: string[] = [];
 
   // output
   // input

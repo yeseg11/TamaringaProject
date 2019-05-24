@@ -12,8 +12,9 @@ export class MusicListComponent implements OnInit {
   constructor(public authService: AuthService, private dom: DomSanitizer) { }
   rated: string;
   ratings: string[] = ['5', '4', '3', '2', '1'];
-  private records: string[] = [];
+  public records: string[] = [];
 
+  public playlist: any;
   // output
   // input
   // emit
@@ -28,6 +29,8 @@ export class MusicListComponent implements OnInit {
     return this.dom.bypassSecurityTrustResourceUrl(youtubeLink);
   }
   ngOnInit() {
+    // every time when the user move on to "My Playlist" tab, he get the playlist Object with the new changes.
+    this.authService.currentPlaylist.subscribe(playlist => this.playlist = playlist);
+    console.log(this.playlist);
   }
-
 }

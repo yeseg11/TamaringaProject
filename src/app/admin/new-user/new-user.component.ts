@@ -11,6 +11,8 @@ import {Subscription} from 'rxjs';
 export class NewUserComponent implements OnInit, OnDestroy {
   isLoading = false;
   private authStatusSub: Subscription;
+  public country: any;
+
 
   constructor(public authService: AuthService) {}
 
@@ -23,7 +25,8 @@ export class NewUserComponent implements OnInit, OnDestroy {
       console.log('invalid form');
       return;
     }
-    // ====================================================
+    // set the loading spinner to true
+    this.isLoading = true;
 
     // find the year that the user was in his twenties
     const twentiesAge = (new Date()).getFullYear() - form.value.age + 20;
@@ -36,7 +39,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.authStatusSub = this.authService.getAuthStatusListener().subscribe(
+    this.authStatusSub = this.authService.getLoadingStatusListener().subscribe(
         authStatus => { // when authStatus switches to false then we set the loading spinner to false.
           this.isLoading = false;
         }

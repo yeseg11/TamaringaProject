@@ -19,14 +19,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (form.invalid) {
             return;
         }
-        // set the spinner loading to true
+        // set the loading spinner to true
         this.isLoading = true;
         this.authService.login(form.value.id, form.value.password);
         // console.log('server: login()');
     }
     // listening to auth service to know if we want to let the admin continue with trying add users
     ngOnInit() {
-        this.authStatusSub = this.authService.getAuthStatusListener().subscribe(
+        this.authStatusSub = this.authService.getLoadingStatusListener().subscribe(
             authStatus => { // when authStatus switches to false then we set the loading spinner to false.
                 this.isLoading = false;
             }

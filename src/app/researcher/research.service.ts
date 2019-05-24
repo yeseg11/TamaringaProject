@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+
+const BACKEND_URL = environment.apiUrl;
 
 @Injectable({providedIn: 'root'})
 export class ResearchService {
@@ -21,7 +24,7 @@ export class ResearchService {
   getResearches() {
     this.http
       .get<{message: string, researches: any }>(
-        'http://localhost:3000/api/researcher/new-research')
+          BACKEND_URL + '/researcher/new-research')
       // map - change an object to a string array ( change all the researches to an array)
       .pipe(map((researchData) => {
         // get all the researches from the server
@@ -76,7 +79,7 @@ export class ResearchService {
                                         variables: variables,
                                         startDate: startDate,
                                         endDate: endDate};
-    this.http.post<{ message: string, researchId: string}>('http://localhost:3000/api/researcher/new-research', researchData)
+    this.http.post<{ message: string, researchId: string}>(BACKEND_URL + '/researcher/new-research', researchData)
       .subscribe(response => {
         const researchId = response.researchId;
         researchData.id = researchId;
@@ -85,7 +88,7 @@ export class ResearchService {
         // update the array
         this.researchesUpdated.next([...this.researches]);
       });
-    // add the research to an array of researches like in Maximillian video
+    // add the research to an array of researches like in
   }
 
   /** -------------------------------------------------------------------------
@@ -95,7 +98,7 @@ export class ResearchService {
    */
   deleteResearch(researchId: string) {
     // delete from the url with a specific id
-    this.http.delete('http://localhost:3000/api/researcher/new-research/' + researchId)
+    this.http.delete(BACKEND_URL + '/researcher/new-research/' + researchId)
       .subscribe(() => {
         // the updated research stays will all the researches that has not the specific id
         // ( that means that the research with the specific id will be removed)

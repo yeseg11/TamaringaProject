@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-// const bcrypt = require("bcrypt"); //move later to routes/users
+const bcrypt = require("bcryptjs"); //move later to routes/users
 const User = require("./models/users");
+const Playlist = require("./models/playlist");
 const Record = require("./models/records");
 const jwt = require('jsonwebtoken');
 const checkAuth = require("./middleware/check-auth"); //just pass the refernce to that funtion (and not execute) and Express will execute for us
@@ -13,7 +14,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-mongoose.connect("mongodb+srv://david:RrOvOoe4ZFDiVpYf@cluster0-bo1pz.mongodb.net/Tamaringa", {useNewUrlParser: true})
+//console.log(process.env);
+//console.log(process.env.MONGO_ATLAS_PW);
+
+mongoose.connect("mongodb+srv://david:" + process.env.MONGO_ATLAS_PW + "@cluster0-bo1pz.mongodb.net/Tamaringa", {useNewUrlParser: true})
     .then(() => {
         console.log("Connected to database!");
     })
@@ -35,35 +39,20 @@ app.use((req, res, next) => {
     next();
 });
 
-
-// app.use((req, res, next) => {
-//   console.log('first middleware');
-// });
-//
-// app.use((req, res, next) => {
-//   res.send('hello from express!');
-// });
-
-
-//move later to routes/users
-//User is our User object of the users model
-//passing a javascript object to it to configure it and there
-// set an id property because my user model has an id property
-
-// app.post("/api/user/signup", (req, res, next) => {
-//   const user = req.body;
-//   console.log("in app.post --- server");
-//   console.log(user);
-//   res.status(201).json({
-//     message: 'Post added successfully -- returned from server'
-//   });
-// });
-
 //save user to the DB
-app.post("/api/user/signup", (req, res, next) => {
+app.post("/api/user/signup", async (req, res) => {
     //once the hash func is done, we get the hash param and then inside the then block we create a new user
     // bcrypt.hash(req.body.password, 10)
     //   .then(hash => {
+
+    /* find the songs according to the twenties year of the user,
+    what country he come from and sorting the results by youtube views */
+    const records = await Record.find({
+        year: {$gt: req.body.year - 3, $lt: req.body.year + 3},
+        country: req.body.country
+    }).sort({'youtube.views': -1}).limit(30);
+
+    // create a user schema
     const user = new User({
         fullName: req.body.fullName,
         id: req.body.id,
@@ -72,40 +61,54 @@ app.post("/api/user/signup", (req, res, next) => {
         country: req.body.country,
         password: req.body.password,
         group: req.body.country + req.body.year,
-        entrances: 0
+        entrances: req.body.entrances,
+        songs: []
     });
-    // let fetchedRecord;
-    // Record.findOne({year: 1990})
-    //     .then(record => {
-    //         console.log(record);
-    //         if (!record) {
-    //             return res.status(401).json({
-    //                 message: "Find record failed"
-    //             });
-    //         }
-    //         fetchedRecord = record;
-    //         return fetchedRecord;
-    //     });
-    user.save()
-        .then(result => {
-            console.log(result);
-            res.status(201).json({
-                message: 'User created!',
-                user: result //we send the result data so we can see what's inside there
-                // record: fetchedRecord
-            });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                message: "Invalid authentication credentials!"
-            });
+    let saveUSer = await user.save();
+    if (!saveUSer) {
+        return res.status(500).json({
+            message: "Invalid authentication credentials!"
         });
-    // });
+    }
+    // build the playlist schema
+    const playlist = {
+        name: saveUSer.group,
+        year: req.body.year,
+        country: req.body.country,
+        records: records
+    };
+    console.log('playlist: ', playlist);
+
+    const query = {name: playlist.name};
+    const update = playlist;
+    const options = { upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
+
+    let playlistIsExist = true;
+
+    let playlistFound = await Playlist.findOne({name: playlist.name});
+    // playlist ins't found, then create new one.
+    if (!playlistFound) {
+        playlistIsExist = false;
+    }
+    // playlist is isn't exist, create a new playlist document according to the playlist scheme we build above
+    if (!playlistIsExist) {
+        playlistFound = await Playlist.findOneAndUpdate(query, update, options);
+        if (!playlistFound) {
+            return res.status(404).json({
+                message: "Playlist is not updated!"
+            });
+        }
+    }
+
+    res.status(201).json({
+        // records: records,
+        user: saveUSer,
+        playlist: playlistFound
+    });
 });
 // ======================test login==========================
 
-app.post("/api/user/login", async(req, res) => {
+app.post("/api/user/login", async (req, res) => {
     const user = await User.findOne({id: req.body.id});
     console.log(user);
     if (!user) {
@@ -113,32 +116,39 @@ app.post("/api/user/login", async(req, res) => {
             message: "User is not found!"
         });
     }
-    if (user.password != req.body.password ) {
+    if (user.password !== req.body.password) {
         return res.status(401).json({
             message: "Invalid authentication credentials!"
         });
     }
 
-
-    const records = await Record.find({year: {$gt: user.year - 3, $lt: user.year + 3}}).limit(20);
-    // console.log(records);
-    if (!records) {
+    const playlist = await Playlist.findOne({name: user.group});
+    if (!playlist) {
         return res.status(401).json({
-            message: "Find record failed"
+            message: "playlist is not found!"
         });
     }
 
+    // const records = await Record.find({year: {$gt: user.year - 3, $lt: user.year + 3}}).limit(20);
+    // // console.log(records);
+    // if (!records) {
+    //     return res.status(401).json({
+    //         message: "Find record failed"
+    //     });
+    // }
+    // console.log(process.env.JWT_KEY);
     const token = jwt.sign(
         {id: user.id, userId: user._id},
-        'secret_this_should_be_longer',
+        process.env.JWT_KEY,
         {expiresIn: "1h"}
     );
 
     res.status(200).json({
         token: token,
         expiresIn: 3600,
-        records: records,
-        userID: user._id
+        // records: records,
+        userID: user._id,
+        playlist: playlist
     });
 });
 
@@ -179,32 +189,32 @@ app.post("/api/user/login", async(req, res) => {
  * @PARAM {Date*} endDate: Given research endDate
  */
 app.post("/api/researcher/new-research", (req, res, next) => {
-  console.log("id1: ", req.body.id);
-  const research = new Research({
-    name: req.body.name,
-    id: req.body.id,
-    // participants: req.body.participants,
-    process: req.body.process,
-    variables: req.body.variables,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-  });
-  research.save()
-    .then(result => {
-      console.log(result);
-      console.log("id2: ", req.body.id);
-      res.status(201).json({
-        message: 'Research created!',
-        researchId: result._id //we send the result data so we can see what's inside there
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        message: 'Creating a research failed!'
-      });
+    console.log("id1: ", req.body.id);
+    const research = new Research({
+        name: req.body.name,
+        id: req.body.id,
+        // participants: req.body.participants,
+        process: req.body.process,
+        variables: req.body.variables,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
     });
-  // });
+    research.save()
+        .then(result => {
+            console.log(result);
+            console.log("id2: ", req.body.id);
+            res.status(201).json({
+                message: 'Research created!',
+                researchId: result._id //we send the result data so we can see what's inside there
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                message: 'Creating a research failed!'
+            });
+        });
+    // });
 });
 
 /** -------------------------------------------------------------------------
@@ -212,15 +222,14 @@ app.post("/api/researcher/new-research", (req, res, next) => {
  *  @PARAM {Object*} researches: researches array
  */
 app.get("/api/researcher/new-research", (req, res, next) => {
-  Research.find().then(documents => {
-    console.log(documents);
-    console.log('type:' + typeof(documents));
-      res.status(200).json({
-        message: "Researches fetched successfully",
-        researches: documents
-      });
+    Research.find().then(documents => {
+        console.log(documents);
+        console.log('type:' + typeof (documents));
+        res.status(200).json({
+            message: "Researches fetched successfully",
+            researches: documents
+        });
     });
-
 });
 
 /** -------------------------------------------------------------------------
@@ -228,10 +237,10 @@ app.get("/api/researcher/new-research", (req, res, next) => {
  *  @PARAM {String*} _id: Given research id
  */
 app.delete("/api/researcher/new-research/:id", (req, res, next) => {
-  Research.deleteOne({_id: req.params.id}).then(result => {
-    console.log(result);
-    res.status(200).json({ message: "Research deleted"});
-  })
+    Research.deleteOne({_id: req.params.id}).then(result => {
+        console.log(result);
+        res.status(200).json({message: "Research deleted"});
+    })
 });
 
 module.exports = app;

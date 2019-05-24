@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <!--<mat-spinner *ngIf="isLoading"></mat-spinner>-->
   <form (submit)="onAddUser(addUserForm)" #addUserForm="ngForm">
 
     <mat-form-field>
@@ -18,13 +18,13 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput name="password" ngModel type="password" placeholder="Password" #passwordInput="ngModel">
+      <input matInput name="password" ngModel type="password" placeholder="Password" #passwordInput="ngModel" required>
       <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Select a Country</mat-label>
-      <mat-select id="country" name="country" [(ngModel)]="country" required>
+      <mat-select name="country" [(ngModel)]="country" required>
         <mat-option>None</mat-option>
         <mat-option value="AQ">Antarctica</mat-option>
         <mat-option value="AR">Argentina</mat-option>
