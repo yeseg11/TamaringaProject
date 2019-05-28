@@ -69,6 +69,7 @@ export class AuthService {
             .subscribe(response => {
                 console.log('response from server: ');
                 console.log(response);
+                this.loadingListener.next(true);
             } , error => {
                 console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
@@ -79,7 +80,7 @@ export class AuthService {
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
-        this.http.post<{ token: string, expiresIn: number, userID: string, playlist }>
+        this.http.post<{ token: string, expiresIn: number, userID: string, userName: string, playlist }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
                 // console.log(typeof (response.playlist));
@@ -116,7 +117,8 @@ export class AuthService {
                         this.isAdminAuthenticated = true;
                         this.adminAuthStatusListener.next(true);
                     }
-                    console.log(this.adminFlag);
+                    // console.log(this.adminFlag);
+                    localStorage.setItem('userName', response.userName);
 
                     const now = new Date();
                     const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
@@ -209,6 +211,7 @@ export class AuthService {
         localStorage.removeItem('token');
         localStorage.removeItem('expiration');
         localStorage.removeItem('admin');
+        localStorage.removeItem('userName');
     }
 
     // get my data from the local storage

@@ -64,7 +64,14 @@ app.post("/api/user/signup", async (req, res) => {
         entrances: req.body.entrances,
         songs: []
     });
-    let saveUSer = await user.save();
+    let saveUSer = await user.save(); //we have to handle this promise
+    // let saveUSer = user.save()
+    //     .catch(err => {
+    //         res.status(500).json({
+    //             message: "Invalid authentication credentials!" + err
+    //         });
+    //     });
+    console.log(saveUSer);
     if (!saveUSer) {
         return res.status(500).json({
             message: "Invalid authentication credentials!"
@@ -81,7 +88,7 @@ app.post("/api/user/signup", async (req, res) => {
 
     const query = {name: playlist.name};
     const update = playlist;
-    const options = { upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
+    const options = {upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
 
     let playlistIsExist = true;
 
@@ -110,7 +117,7 @@ app.post("/api/user/signup", async (req, res) => {
 
 app.post("/api/user/login", async (req, res) => {
     const user = await User.findOne({id: req.body.id});
-    console.log(user);
+    // console.log(user);
     if (!user) {
         return res.status(401).json({
             message: "User is not found!"
@@ -148,6 +155,7 @@ app.post("/api/user/login", async (req, res) => {
         expiresIn: 3600,
         // records: records,
         userID: user._id,
+        userName: user.fullName,
         playlist: playlist
     });
 });

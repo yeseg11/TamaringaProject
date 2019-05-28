@@ -4,19 +4,10 @@
   margin-right: 42%;
 }
 
-/*.video-view{*/
-  /*margin: auto;*/
-  /*height: 100%;*/
-  /*width: 100%;*/
-  /*padding: 10px;*/
-  /*position: fixed;*/
-  /*left: 5%;*/
-/*}*/
-
-/*.music{*/
-  /*height: 100%;*/
-  /*widht: 100%;*/
-/*}*/
+h1 {
+  text-align: center;
+  color: midnightblue;
+}
 
 .title{
   text-align: center;
@@ -25,34 +16,3 @@
   padding: 10px;
 
 }
-
-/*.play-buttons{*/
-  /*!*margin: auto;*!*/
-  /*margin-left: 38%;*/
-  /*margin-right: 38%;*/
-
-/*}*/
-/*.video{*/
-  /*height: 100%;*/
-  /*width: 99%;*/
-
-/*}*/
-
-/*.example-radio-group {*/
-  /*display: inline-flex;*/
-  /*flex-direction: column;*/
-  /*position: fixed;*/
-  /*right: 5%;*/
-/*}*/
-
-/*.example-radio-button {*/
-  /*margin: 5px;*/
-/*}*/
-
-/*.example-selected-value {*/
-  /*margin: 15px 0;*/
-/*}*/
-
-/*.video-view, .rating{*/
-  /*display: inline-block;*/
-/*}*/

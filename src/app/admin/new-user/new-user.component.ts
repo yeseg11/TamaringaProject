@@ -31,11 +31,10 @@ export class NewUserComponent implements OnInit, OnDestroy {
     // find the year that the user was in his twenties
     const twentiesAge = (new Date()).getFullYear() - form.value.age + 20;
 
-    // set the spinner loading to true
-    // this.isLoading = true; not working
     this.authService.createUser(form.value.fullName, form.value.id, form.value.age, twentiesAge, form.value.password, form.value.country);
     console.log('server: createUser()');
-    // form.resetForm();
+    // this.isLoading = false;
+    form.resetForm();
   }
 
   ngOnInit() {
