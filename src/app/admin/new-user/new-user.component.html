@@ -1,29 +1,29 @@
 <mat-card>
   <!--<mat-spinner *ngIf="isLoading"></mat-spinner>-->
-  <form (submit)="onAddUser(addUserForm)" #addUserForm="ngForm">
-
+  <form (submit)="onAddUser(addUserForm)" #addUserForm="ngForm" >
+    <div class="example-container">
     <mat-form-field>
-      <input matInput name="fullName" ngModel type="text" placeholder="Full Name" #idInput="ngModel" required>
-      <mat-error *ngIf="idInput.invalid">Please enter a name.</mat-error>
+      <input matInput name="fullName" ngModel type="text" placeholder="שם מלא" #idInput="ngModel" required>
+      <mat-error *ngIf="idInput.invalid">הכנס שם</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput name="id" ngModel type="number" placeholder="ID" #idInput="ngModel" required id>
-      <mat-error *ngIf="idInput.invalid">Please enter a valid ID.</mat-error>
+      <input matInput name="id" ngModel type="number" placeholder="תעודת זהות" #idInput="ngModel" required id>
+      <mat-error *ngIf="idInput.invalid">הכנס תעודת זהות</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput name="age" ngModel type="number" placeholder="Age" #idInput="ngModel" required>
-      <mat-error *ngIf="idInput.invalid">Please enter a valid age.</mat-error>
+      <input matInput name="age" ngModel type="number" placeholder="גיל" #idInput="ngModel" required>
+      <mat-error *ngIf="idInput.invalid">הכנס גיל</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput name="password" ngModel type="password" placeholder="Password" #passwordInput="ngModel" required>
-      <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
+      <input matInput name="password" ngModel type="password" placeholder="סיסמה" #passwordInput="ngModel" required>
+      <mat-error *ngIf="passwordInput.invalid">הכנס סיסמה</mat-error>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-label>Select a Country</mat-label>
+      <mat-label>בחר מדינה</mat-label>
       <mat-select name="country" [(ngModel)]="country" required>
         <mat-option>None</mat-option>
         <mat-option value="AQ">Antarctica</mat-option>
@@ -109,8 +109,8 @@
         <mat-option value="ZW">Zimbabwe</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">Add User</button>
+    </div>
+    <button mat-raised-button class="create-user" type="submit" *ngIf="!isLoading">הוסף משתמש</button>
 
   </form>
 </mat-card>

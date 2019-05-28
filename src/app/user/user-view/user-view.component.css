@@ -26,6 +26,13 @@
 
 }
 
+p {
+  text-align: center;
+  color: #0d0d0d;
+  font-size: 60px;
+  font-weight: bold;
+}
+
 /*.play-buttons{*/
   /*!*margin: auto;*!*/
   /*margin-left: 38%;*/

@@ -5,14 +5,17 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import {AuthData} from '../auth/auth-data.model';
 
 const BACKEND_URL = environment.apiUrl;
 
 @Injectable({providedIn: 'root'})
 export class ResearchService {
   private researches: ResearchData[] = [];
+  private users: AuthData [] = [];
   private researchesUpdated = new Subject<ResearchData[]>();
-
+  private usersUpdated = new Subject<AuthData[]>();
+  private userNames: string[] = [];
   constructor(private http: HttpClient, private router: Router) {
   }
 
@@ -31,7 +34,7 @@ export class ResearchService {
         return researchData.researches.map(research => {
           return {
             name: research.name,
-            // participants: string,
+            participants: research.participants,
             process: research.process,
             variables: research.variables,
             startDate: research.startDate,
@@ -44,7 +47,7 @@ export class ResearchService {
         // put the transformed object to an array to the researches array
         this.researches = transformedResearch;
         this.researchesUpdated.next([...this.researches]);
-        console.log('type from client: ' + this.researches);
+        // console.log('type from client: ' + this.researches);
       });
   }
   getResearchesUpdateListener() {
@@ -66,7 +69,7 @@ export class ResearchService {
    */
   createResearch(id: null,
                  name: string,
-                 // participants: string,
+                 participants: string,
                  process: string,
                  variables: string,
                  startDate: Date,
@@ -74,7 +77,7 @@ export class ResearchService {
     // create a const that save the user input
     const researchData: ResearchData = {id: id,
                                         name: name,
-                                        // participants: participants,
+                                        participants: participants,
                                         process: process,
                                         variables: variables,
                                         startDate: startDate,
@@ -87,6 +90,7 @@ export class ResearchService {
         this.researches.push(researchData);
         // update the array
         this.researchesUpdated.next([...this.researches]);
+        console.log('new research: ', researchData);
       });
     // add the research to an array of researches like in
   }
@@ -108,5 +112,27 @@ export class ResearchService {
         this.researchesUpdated .next([...this.researches]);
         console.log('deleted');
       });
+  }
+
+  getUsers() {
+    this.http
+      .get<{message: string, users: any }>(
+        BACKEND_URL + '/user/users')
+      .subscribe(response => {
+        const userRes = response.users;
+        for ( const user of userRes ) {
+          this.userNames.push(user.fullName);
+        }
+      });
+    console.log('users names: ', this.userNames);
+    return this.userNames;
+  }
+
+  getUsersUpdateListener() {
+    return this.usersUpdated.asObservable();
+  }
+
+  getUser(id: number) {
+    return {...this.users.find(r => r.id === id)};
   }
 }
