@@ -1,7 +1,8 @@
 <!--<div class="example-container">-->
-<mat-card >
+<mat-card>
 
-  <form class="example-container" (submit)="onAddResearch(addResearchForm)" #addResearchForm="ngForm">
+  <form  (submit)="onAddResearch(addResearchForm)" #addResearchForm="ngForm">
+    <div class="example-container">
     <p>יצירת מחקר חדש</p>
     <mat-form-field>
       <input
@@ -12,9 +13,8 @@
         placeholder="שם המחקר"
         required
         #name="ngModel">
-      <mat-error *ngIf="name.invalid">Please enter a name.</mat-error>
+      <mat-error *ngIf="name.invalid">הכנס שם</mat-error>
     </mat-form-field>
-    <!--#idInput="ngModel"-->
 
 
     <!--<mat-form-field>-->
@@ -23,7 +23,12 @@
         <!--<mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}} </mat-option>-->
       <!--</mat-select>-->
     <!--</mat-form-field>-->
-
+      <mat-form-field>
+        <mat-label>משתתפים</mat-label>
+        <mat-select name="participants" [formControl]="usersList" multiple>
+          <mat-option *ngFor="let user of userNames" [value]="name">{{user}} </mat-option>
+        </mat-select>
+      </mat-form-field>
 
 
     <mat-form-field>
@@ -36,9 +41,8 @@
         required
         #process="ngModel">
       </textarea>
-      <mat-error *ngIf="process.invalid">Please enter a valid process.</mat-error>
+      <mat-error *ngIf="process.invalid">הכנס תהליך</mat-error>
     </mat-form-field>
-    <!--#idInput="ngModel" &#45;&#45; shouold be inside the input of process-->
 
     <mat-form-field>
       <textarea
@@ -50,9 +54,8 @@
         required
         #variables="ngModel">
       </textarea>
-      <mat-error *ngIf="variables.invalid">Please enter a valid variables.</mat-error>
+      <mat-error *ngIf="variables.invalid">הכנס משתנים</mat-error>
     </mat-form-field>
-    <!--#idInput="ngModel"-->
 
 
     <mat-form-field>
@@ -67,10 +70,8 @@
         #startDate="ngModel">
       <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
       <mat-datepicker #start></mat-datepicker>
-      <mat-error *ngIf="startDate.invalid">Please select a start date</mat-error>
+      <mat-error *ngIf="startDate.invalid">בחר תאריך התחלה</mat-error>
     </mat-form-field>
-    <!--#idInput="ngModel"-->
-
 
     <mat-form-field >
       <input
@@ -84,17 +85,14 @@
         #endDate="ngModel">
       <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
       <mat-datepicker #end></mat-datepicker>
-      <mat-error *ngIf="endDate.invalid">Please select an end date.</mat-error>
+      <mat-error *ngIf="endDate.invalid">בחר תאריך סוף</mat-error>
     </mat-form-field>
-    <!--#idInput="ngModel" -->
 
 
-
+    </div>
     <button
       class="create-research"
       mat-flat-button
-      color="primary"
       type="submit">הגדר מחקר</button>
-
   </form>
 </mat-card>

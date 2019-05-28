@@ -16,3 +16,11 @@ h1 {
   padding: 10px;
 
 }
+
+p {
+  text-align: center;
+  color: #0d0d0d;
+  font-size: 60px;
+  font-weight: bold;
+}
+

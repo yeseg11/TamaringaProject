@@ -1,7 +1,9 @@
+<body>
 <h1>ברוך הבא אדמין</h1>
- <mat-tab-group animationDuration="0ms">
-   <mat-tab label="יצירת משתמש"> <app-new-user></app-new-user> </mat-tab>
-   <mat-tab label="יצירת אדמין"></mat-tab>
-   <mat-tab label="יצירת חוקר"></mat-tab>
- </mat-tab-group>
+<mat-tab-group animationDuration="0ms" mat-align-tabs="end">
+ <mat-tab label="יצירת חוקר"></mat-tab>
+ <mat-tab label="יצירת אדמין"><app-new-admin></app-new-admin></mat-tab>
+ <mat-tab label="יצירת משתמש"><app-new-user></app-new-user></mat-tab>
+</mat-tab-group>
 
+</body>

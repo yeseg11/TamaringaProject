@@ -84,7 +84,7 @@ app.post("/api/user/signup", async (req, res) => {
         country: req.body.country,
         records: records
     };
-    console.log('playlist: ', playlist);
+    // console.log('playlist: ', playlist);
 
     const query = {name: playlist.name};
     const update = playlist;
@@ -160,6 +160,19 @@ app.post("/api/user/login", async (req, res) => {
     });
 });
 
+
+app.get("/api/user/users", (req, res, next) => {
+  User.find().then(users => {
+
+    console.log('users:44444444444444444444444444444444444444444444444      ', users);
+    console.log('type:' + typeof (users));
+    res.status(200).json({
+      message: "users fetched successfully",
+      users: users,
+    });
+  });
+});
+
 // ==========================================================
 // app.post("/api/user/login", (req, res, next) => {
 //     //console.log(user);
@@ -197,7 +210,7 @@ app.post("/api/user/login", async (req, res) => {
  * @PARAM {Date*} endDate: Given research endDate
  */
 app.post("/api/researcher/new-research", (req, res, next) => {
-    console.log("id1: ", req.body.id);
+    // console.log("id1: ", req.body.id);
     const research = new Research({
         name: req.body.name,
         id: req.body.id,
@@ -209,15 +222,15 @@ app.post("/api/researcher/new-research", (req, res, next) => {
     });
     research.save()
         .then(result => {
-            console.log(result);
-            console.log("id2: ", req.body.id);
+            // console.log(result);
+            // console.log("id2: ", req.body.id);
             res.status(201).json({
                 message: 'Research created!',
                 researchId: result._id //we send the result data so we can see what's inside there
             });
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.status(500).json({
                 message: 'Creating a research failed!'
             });
@@ -231,8 +244,8 @@ app.post("/api/researcher/new-research", (req, res, next) => {
  */
 app.get("/api/researcher/new-research", (req, res, next) => {
     Research.find().then(documents => {
-        console.log(documents);
-        console.log('type:' + typeof (documents));
+        // console.log(documents);
+        // console.log('type:' + typeof (documents));
         res.status(200).json({
             message: "Researches fetched successfully",
             researches: documents
@@ -252,4 +265,5 @@ app.delete("/api/researcher/new-research/:id", (req, res, next) => {
 });
 
 module.exports = app;
+
 

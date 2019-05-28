@@ -1,9 +1,11 @@
 <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">-->
 <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>-->
 <!--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+<body>
 <!------ Include the above in your HEAD tag ---------->
-<h1>ברוך הבא לתמרינגה</h1>
-<div class="wrapper fadeInDown">
+<p>ברוך הבא לתמרינגה</p>
+
+<div class="wrapper fadeInDown" >
   <div id="formContent">
     <!-- Tabs Titles -->
 
@@ -15,6 +17,7 @@
 <!-- =========================================================
    -->
     <mat-card>
+      <!-- <mat-spinner></mat-spinner> -->
       <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
 
         <mat-form-field>
@@ -27,7 +30,7 @@
           <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
         </mat-form-field>
 
-        <button mat-raised-button color="accent" type="submit" *ngIf="!isLoading">Login</button>
+        <button mat-raised-button type="submit" *ngIf="!isLoading">Login</button>
 
         <!-- <a routerLink="/admin"><input type="submit" class="fadeIn fourth" value="אדמין"></a> -->
 
@@ -56,4 +59,4 @@
 
   </div>
 </div>
-
+</body>

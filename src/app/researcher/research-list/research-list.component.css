@@ -6,3 +6,10 @@
 .info-text{
   text-align: center;
 }
+
+mat-expansion-panel {
+
+  width: 30%;
+  margin: auto;
+
+}
