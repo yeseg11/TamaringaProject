@@ -61,4 +61,8 @@ export class MusicListComponent implements OnInit {
     // console.log(this.playlist.records[5].youtube.videoId);
 
   }
+
+  onAddRating(rate: number, id: number, ytId: string) {
+    console.log('rate: ', rate, ' id: ', id, ' youtube id: ', ytId);
+  }
 }

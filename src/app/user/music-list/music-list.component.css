@@ -28,3 +28,9 @@
   display: flex;
   justify-content: center;
 }
+
+.example-button-row {
+  /*font-size: 5rem;*/
+  display: flex;
+  justify-content: center;
+}

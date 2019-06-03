@@ -31,15 +31,17 @@
       class="ratingLabel"
       id="example-radio-group-label">
       ?אהבת</label>
-    <mat-radio-group
-      aria-labelledby="example-radio-group-label"
-      class="example-radio-group rating"
-      [(ngModel)]="rated">
-      <mat-radio-button
-        class="rating example-radio-button"
-        *ngFor="let rating of ratings" [value]="rating">
-        {{ rating }}
-      </mat-radio-button>
-    </mat-radio-group>
+    <!--<ngb-rating class="star" max="5" [(rate)]="currentRate"></ngb-rating>-->
+    <!--<hr>-->
+    <!--<pre>Rate: <b>{{currentRate}}</b></pre>-->
+
+    <div class="example-button-row">
+      <button mat-fab color="accent" (click)="onAddRating(1, this.id, item.key)">1</button>
+      <button mat-fab color="accent" (click)="onAddRating(2, this.id, item.key)">2</button>
+      <button mat-fab color="accent" (click)="onAddRating(3, this.id, item.key)">3</button>
+      <button mat-fab color="accent" (click)="onAddRating(4, this.id, item.key)">4</button>
+      <button mat-fab color="accent" (click)="onAddRating(5, this.id, item.key)">5</button>
+    </div>
+
   </div>
 </mat-card>
