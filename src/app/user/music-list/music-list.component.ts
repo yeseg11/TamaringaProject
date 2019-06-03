@@ -17,7 +17,7 @@ export class MusicListComponent implements OnInit {
   public recordsTitle: string[] = [];
   public playlist: any;
   map = new Map();
-
+  private id: number;
   // output
   // input
   // emit
@@ -36,6 +36,9 @@ export class MusicListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.id = Number(localStorage.getItem('id'));
+    console.log(this.id);
+
     // every time when the user move on to "My Playlist" tab, he get the playlist Object with the new changes.
     this.authService.currentPlaylist.subscribe(playlist => this.playlist = playlist);
 

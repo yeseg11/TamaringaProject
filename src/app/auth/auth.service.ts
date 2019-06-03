@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {AuthData, AuthDataLogin} from './auth-data.model';
 import {Subject, BehaviorSubject} from 'rxjs';
 import {Router} from '@angular/router';
-import { environment } from '../../environments/environment';
+import {environment} from '../../environments/environment';
 import {computeStyle} from '@angular/animations/browser/src/util';
 
 const BACKEND_URL = environment.apiUrl;
@@ -70,7 +70,7 @@ export class AuthService {
                 console.log('response from server: ');
                 console.log(response);
                 this.loadingListener.next(true);
-            } , error => {
+            }, error => {
                 console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
                 this.loadingListener.next(false);
@@ -80,7 +80,7 @@ export class AuthService {
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
-        this.http.post<{ token: string, expiresIn: number, userID: string, userName: string, playlist }>
+        this.http.post<{ token: string, expiresIn: number, userDbId: string, userName: string, playlist, userId: string }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
                 // console.log(typeof (response.playlist));
@@ -103,13 +103,15 @@ export class AuthService {
                     // console.log(response);
                     console.log('expires in duration: ', expiresInDuration);
 
+                    localStorage.setItem('id', response.userId);
+
                     this.isAuthenticated = true;
                     this.isAdminAuthenticated = true;
 
                     this.authStatusListener.next(true);
                     this.loadingListener.next(true);
 
-                    if (response.userID === this.test) {
+                    if (response.userDbId === this.test) {
 
                         this.adminFlag = true;
                         localStorage.setItem('admin', String(this.adminFlag));
@@ -132,13 +134,14 @@ export class AuthService {
                         this.router.navigate(['/user']);
                     }
                 }
-            } , error => {
+            }, error => {
                 console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
                 this.authStatusListener.next(false);
                 this.loadingListener.next(false);
             });
     }
+
     // update the playlist Object, called once when user logged in, music-list is listening on any change in playlist
     updatePlaylist(playlist: any) {
         // const arrPlaylist = playlist;
@@ -212,6 +215,7 @@ export class AuthService {
         localStorage.removeItem('expiration');
         localStorage.removeItem('admin');
         localStorage.removeItem('userName');
+        localStorage.removeItem('id');
     }
 
     // get my data from the local storage

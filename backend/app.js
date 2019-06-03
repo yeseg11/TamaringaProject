@@ -154,7 +154,8 @@ app.post("/api/user/login", async (req, res) => {
         token: token,
         expiresIn: 3600,
         // records: records,
-        userID: user._id,
+        userDbId: user._id,
+        userId: user.id,
         userName: user.fullName,
         playlist: playlist
     });
