@@ -2,26 +2,26 @@
   <span>
     <a routerLink="/">Tamaringa</a>
   </span>
-    <span class="spacer"></span>
-    <ul>
-        <li *ngIf="userIsAuthenticated">
-            <a mat-button routerLink="/user" routerLinkActive="mat-accent">My Playlist</a>
-        </li>
+  <span class="spacer"></span>
+  <ul>
+    <!--<li *ngIf="userIsAuthenticated">-->
+      <!--<a mat-button routerLink="/user" routerLinkActive="mat-accent">My Playlist</a>-->
+    <!--</li>-->
 
-        <li *ngIf="adminAuthenticated">
-            <a mat-button routerLink="/admin" routerLinkActive="mat-accent">Admin</a>
-        </li>
+    <!--<li *ngIf="adminAuthenticated">-->
+      <!--<a mat-button routerLink="/admin" routerLinkActive="mat-accent">Admin</a>-->
+    <!--</li>-->
 
-        <li>
-            <a mat-button routerLink="/researcher" routerLinkActive="mat-accent">Researcher</a>
-        </li>
+    <!--<li>-->
+      <!--<a mat-button routerLink="/researcher" routerLinkActive="mat-accent">Researcher</a>-->
+    <!--</li>-->
 
-        <li>
-            <a mat-button routerLink="/add-music" routerLinkActive="mat-accent">Add Music</a>
-        </li>
+    <!--<li>-->
+      <!--<a mat-button routerLink="/add-music" routerLinkActive="mat-accent">Add Music</a>-->
+    <!--</li>-->
 
-        <li *ngIf="userIsAuthenticated">
-            <button mat-button (click)="onLogout()">Logout</button>
-        </li>
-    </ul>
+    <li *ngIf="userIsAuthenticated">
+      <button mat-button (click)="onLogout()">התנתק</button>
+    </li>
+  </ul>
 </mat-toolbar>

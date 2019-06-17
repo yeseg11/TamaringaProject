@@ -12,8 +12,10 @@ import {AuthService} from '../auth/auth.service';
 export class HeaderComponent implements OnInit, OnDestroy {
     userIsAuthenticated = false;
     adminAuthenticated = false;
+    researcherAuthenticated = false;
     private authListenerSubs: Subscription;
     private adminAuthListenerSubs: Subscription;
+    private researcherAuthListenerSubs: Subscription;
 
     constructor(private authService: AuthService) {
     }
@@ -22,6 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.userIsAuthenticated = this.authService.getIsAuth();
         this.adminAuthenticated = this.authService.getIsAdmin();
+        this.researcherAuthenticated = this.authService.getIsResearcher();
 
         this.authListenerSubs = this.authService
             .getAuthStatusListener()
@@ -35,6 +38,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
             .subscribe(isAuthenticated => {
                 this.adminAuthenticated = isAuthenticated;
             });
+
+        this.researcherAuthListenerSubs = this.authService
+          .getResearcherAuthStatusListener()
+          .subscribe(isAuthenticated => {
+            this.researcherAuthenticated = isAuthenticated;
+          });
     }
 
     // Should clear the token and inform all interested parts on the page about changed authentication status.

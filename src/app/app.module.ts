@@ -45,6 +45,7 @@ import {CommonModule} from '@angular/common';
 import { MusicListComponent } from './user/music-list/music-list.component';
 import {MatIconModule} from '@angular/material/icon';
 import { NewAdminComponent } from './admin/new-admin/new-admin.component';
+import { NewResearcherComponent } from './admin/new-researcher/new-researcher.component';
 
 
 
@@ -62,7 +63,8 @@ import { NewAdminComponent } from './admin/new-admin/new-admin.component';
     ErrorComponent,
     ResearchListComponent,
     MusicListComponent,
-    NewAdminComponent
+    NewAdminComponent,
+    NewResearcherComponent
   ],
   imports: [
     BrowserModule,
