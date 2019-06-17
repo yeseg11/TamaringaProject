@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
-import { AuthService } from '../auth.service';
+import {AuthService} from '../auth.service';
 import {Subscription} from 'rxjs';
 
 @Component({
@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.authService.login(form.value.id, form.value.password);
         // console.log('server: login()');
     }
+
     // listening to auth service to know if we want to let the admin continue with trying add users
     ngOnInit() {
         this.authStatusSub = this.authService.getLoadingStatusListener().subscribe(

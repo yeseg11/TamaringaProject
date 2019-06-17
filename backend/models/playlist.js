@@ -8,7 +8,7 @@ const playlistSchema = mongoose.Schema({
     year:Number,
     country:String,
     records: [{
-        mbid: String,
+        mbId: String,
         title: String,
         year: Number,
         artist: [],

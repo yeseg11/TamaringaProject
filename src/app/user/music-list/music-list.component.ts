@@ -10,14 +10,14 @@ import {DomSanitizer} from '@angular/platform-browser';
 export class MusicListComponent implements OnInit {
 
   constructor(public authService: AuthService, private dom: DomSanitizer) { }
-  rated: string;
-  ratings: string[] = ['5', '4', '3', '2', '1'];
   public recordsVideoId: string[] = [];
   public plays: string[] = [];
   public recordsTitle: string[] = [];
   public playlist: any;
   map = new Map();
   private id: number;
+  private userEntrance: number;
+
   // output
   // input
   // emit
@@ -36,6 +36,7 @@ export class MusicListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.userEntrance = Number(localStorage.getItem('entrance'));
     this.id = Number(localStorage.getItem('id'));
     console.log(this.id);
 
@@ -62,7 +63,9 @@ export class MusicListComponent implements OnInit {
 
   }
 
-  onAddRating(rate: number, id: number, ytId: string) {
-    console.log('rate: ', rate, ' id: ', id, ' youtube id: ', ytId);
+  onAddRating(rate: number, userId: number, ytId: string) {
+    console.log('rate: ', rate, ' id: ', userId, ' youtube id: ', ytId);
+    this.authService.addVote(rate, userId, ytId);
+    alert('vote add');
   }
 }

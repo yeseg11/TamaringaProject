@@ -80,7 +80,8 @@ export class AuthService {
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
-        this.http.post<{ token: string, expiresIn: number, userDbId: string, userName: string, playlist, userId: string }>
+        this.http.post<{ token: string, expiresIn: number, userDbId: string, userName: string,
+            playlist, userId: string, entrance: number }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
                 // console.log(typeof (response.playlist));
@@ -119,7 +120,7 @@ export class AuthService {
                         this.isAdminAuthenticated = true;
                         this.adminAuthStatusListener.next(true);
                     }
-                    // console.log(this.adminFlag);
+                    localStorage.setItem('entrance', String(response.entrance));
                     localStorage.setItem('userName', response.userName);
 
                     const now = new Date();
@@ -150,6 +151,15 @@ export class AuthService {
         //     this.records.push(rec.youtube.videoId);
         // }
         this.playlistSource.next(playlist);
+    }
+
+    addVote(rate: number, userId: number, ytId: string) {
+        // console.log(rate, userId, ytId);
+        this.http.get(BACKEND_URL + '/user/' + userId + '/youtube/' + ytId + '/rate/' + rate)
+            .subscribe( response => {
+                console.log(response);
+        });
+
     }
 
     autoUserAuth() {
@@ -187,7 +197,7 @@ export class AuthService {
         // pass that information to anyone who is interested
         this.authStatusListener.next(false); // false because the user in now not authenticated anymore
         this.adminAuthStatusListener.next(false);
-        this.clearAuthDta();
+        this.clearAuthData();
         clearTimeout(this.tokenTimer);
         // reach out to my router to navigate back to the home page
         this.router.navigate(['/']);
@@ -210,12 +220,13 @@ export class AuthService {
     }
 
     // clear the local storage
-    private clearAuthDta() {
+    private clearAuthData() {
         localStorage.removeItem('token');
         localStorage.removeItem('expiration');
         localStorage.removeItem('admin');
         localStorage.removeItem('userName');
         localStorage.removeItem('id');
+        localStorage.removeItem('entrance');
     }
 
     // get my data from the local storage

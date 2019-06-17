@@ -8,6 +8,7 @@ const Record = require("./models/records");
 const jwt = require('jsonwebtoken');
 const checkAuth = require("./middleware/check-auth"); //just pass the refernce to that funtion (and not execute) and Express will execute for us
 const Research = require("./models/research");
+const similarity = require('compute-cosine-similarity');
 
 const app = express();
 
@@ -61,7 +62,7 @@ app.post("/api/user/signup", async (req, res) => {
         country: req.body.country,
         password: req.body.password,
         group: req.body.country + req.body.year,
-        entrances: req.body.entrances,
+        entrances: 0,
         songs: []
     });
     let saveUSer = await user.save(); //we have to handle this promise
@@ -71,7 +72,7 @@ app.post("/api/user/signup", async (req, res) => {
     //             message: "Invalid authentication credentials!" + err
     //         });
     //     });
-    console.log(saveUSer);
+    // console.log(saveUSer);
     if (!saveUSer) {
         return res.status(500).json({
             message: "Invalid authentication credentials!"
@@ -84,16 +85,33 @@ app.post("/api/user/signup", async (req, res) => {
         country: req.body.country,
         records: records
     };
-    // console.log('playlist: ', playlist);
+
+
+    ////////////
+    // const pl = new Playlist({
+    //     name: saveUSer.group,
+    //     year: req.body.year,
+    //     country: req.body.country,
+    //     records: records
+    // });
+    // console.log('pl:\n', pl,'\n\n');
+    // let savePl = await pl.save(); //we have to handle this promise
+    // console.log('savePl:\n', savePl,'\n\n');
+
+    ////////////
+    // console.log('records:\n', playlist.records[0],'\n\n');
+    // console.log('playlist:\n\n', playlist,'\n\n');
 
     const query = {name: playlist.name};
     const update = playlist;
-    const options = {upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
+    const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 
     let playlistIsExist = true;
 
     let playlistFound = await Playlist.findOne({name: playlist.name});
     // playlist ins't found, then create new one.
+    // console.log('playlistFound1:\n', playlistFound,'\n\n');
+
     if (!playlistFound) {
         playlistIsExist = false;
     }
@@ -102,15 +120,16 @@ app.post("/api/user/signup", async (req, res) => {
         playlistFound = await Playlist.findOneAndUpdate(query, update, options);
         if (!playlistFound) {
             return res.status(404).json({
-                message: "Playlist is not updated!"
+                message: "Playlist isn't found for your user"
             });
         }
     }
+    console.log('playlistFound2:\n', playlistFound, '\n\n');
 
     res.status(201).json({
         // records: records,
         user: saveUSer,
-        playlist: playlistFound
+        playlist: playlistFound,
     });
 });
 // ======================test login==========================
@@ -128,6 +147,8 @@ app.post("/api/user/login", async (req, res) => {
             message: "Invalid authentication credentials!"
         });
     }
+    user.entrances += 1;
+    await user.save();
 
     const playlist = await Playlist.findOne({name: user.group});
     if (!playlist) {
@@ -157,7 +178,8 @@ app.post("/api/user/login", async (req, res) => {
         userDbId: user._id,
         userId: user.id,
         userName: user.fullName,
-        playlist: playlist
+        playlist: playlist,
+        entrance : user.entrances
     });
 });
 
@@ -264,6 +286,117 @@ app.delete("/api/researcher/new-research/:id", (req, res, next) => {
         res.status(200).json({message: "Research deleted"});
     })
 });
+
+app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
+    const usersId = req.params.id;
+    const user = await User.findOne({id: usersId});
+    if (!user) {
+        return res.status(401).json({
+            message: "User is not found!"
+        });
+    }
+
+    // console.log(req.params.ytid);
+    const record = await Record.findOne({"youtube.videoId": req.params.ytid});
+    const mbId = record.mbId;
+    const usersVote = req.params.n;
+
+    // console.log('user:\n', user, '\n\n================================\n');
+
+    // user.songs.id = usersId;
+    // user.songs.mbid = mbId;
+    // user.songs.vote = usersVote;
+    const obj = {
+        songs: JSON.stringify({
+            id: usersId,
+            mbid: mbId,
+            vote: usersVote
+        })
+    };
+    user.songs = JSON.parse(obj.songs);
+    // console.log('user:\n', user, '\n\n================================\n');
+
+    var bulk = User.collection.initializeOrderedBulkOp();
+    bulk.find({
+        id: user.id                 //update the id , if have - update. else - build new document
+    }).upsert().updateOne(user);
+    bulk.execute(function (err, BulkWriteResult) {
+        if (err) return next(err);
+        // do cosine similarity calc in 2 minutes
+        // loop all songs
+        var data = user.songs[0];
+        console.log('data:\n', data, '\n\n');
+        var group = user.group;
+        console.log('group:\n', group, '\n\n');
+        //
+        // const playlist = await Playlist.findOne({name: user.group});
+        //
+        // var lookup = {'name': group, 'records.mbid': data.mbid};
+        // "q" holds the return obj - playlist document found
+        Playlist.findOne({name: user.group, 'records.mbId': user.songs[0].mbid}).exec(function (err, q) {
+
+            // console.log('q:\n',q,'\n\n');
+            console.log('err:\n', err, '\n\n');
+
+            // return the index of the song in the records obj arr
+            const pos = q.records.findIndex(e => e.mbId === data.mbid);
+            q.records[pos].votes = q.records[pos].votes || [];
+
+            const posUser = q.records[pos].votes.findIndex(e => e.userId === data.id);
+            console.log('posUser:\n', posUser, '\n\n');
+
+            // check if first user's vote for the voted song and then update the voting data
+            if (posUser >= 0) {
+                q.records[pos].votes[posUser].vote = data.vote
+            } else {
+                q.records[pos].votes.push({userId: data.id, vote: data.vote})
+            }
+            const userArr = []; // array of all votes per records. for example: [0,0,2,0,5,1,5,0...]
+            const users = []; //array of users that share your playlist
+            q.records.forEach(rec => {
+                // למה המערך לא מופיע בסדר הנכון? אחרי שמצביעים
+                userArr.push(rec.votes.filter(x => x.userId === data.id).map(x => x.vote)[0] || 0);
+                rec.votes.map(function (x) {
+                    if (users.indexOf(x.userId) === -1 && x.userId !== data.id) {
+                        users.push(x.userId)
+                    }
+                });
+            });
+            console.log('userArr:\n', userArr, '\n\n');
+            console.log('users:\n', users, '\n\n');
+
+
+            users.forEach(u => {
+                const votesByUser = [];
+                q.records.forEach(rec => {
+                    votesByUser.push(rec.votes.filter(x => x.userId === u).map(x => x.vote)[0] || 0)
+                });
+                q.similarity = q.similarity || [];
+                const pos = q.similarity.findIndex(x => x.u1 === u && x.u2 === data.id || x.u2 === u && x.u1 === data.id);
+                //console.log(pos);
+                if (pos >= 0) {
+                    q.similarity[pos].similarity = similarity(userArr, votesByUser);
+                } else {
+                    q.similarity.push({u1: u, u2: data.id, similarity: similarity(userArr, votesByUser)})
+                }
+            });
+            console.log('q.similarity:\n', q.similarity, '\n\n');
+            q.markModified('similarity');
+            q.save(function (err) { // Mongoose will save changes to `similarity`.
+                if (err) return next(err);
+                res.json({
+                    message: 'cool man',
+                });
+
+            })
+        });
+    });
+
+    // res.status(200).json({
+    //     user: user,
+    // });
+});
+
 
 module.exports = app;
 
