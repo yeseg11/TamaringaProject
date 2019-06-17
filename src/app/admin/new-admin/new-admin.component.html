@@ -1,31 +1,25 @@
-<mat-card>
-  <!--<mat-spinner *ngIf="isLoading"></mat-spinner>-->
-  <form (submit)="onAddUser(addUserForm)" #addUserForm="ngForm" >
-    <div class="example-container">
-      <mat-form-field>
-        <input matInput name="fullName" ngModel type="text" placeholder="שם מלא" #idInput="ngModel" required>
-        <mat-error *ngIf="idInput.invalid">הכנס שם</mat-error>
-      </mat-form-field>
+<!--<mat-card>-->
+  <!--&lt;!&ndash;<mat-spinner *ngIf="isLoading"></mat-spinner>&ndash;&gt;-->
+  <!--<form (submit)="onAddAdmin(addAdminForm)" #addAdminForm="ngForm" >-->
+    <!--<div class="example-container">-->
+      <!--<mat-form-field>-->
+        <!--<input matInput name="fullName" ngModel type="text" placeholder="שם מלא" #idInput="ngModel" required>-->
+        <!--<mat-error *ngIf="idInput.invalid">הכנס שם</mat-error>-->
+      <!--</mat-form-field>-->
 
-      <mat-form-field>
-        <input matInput name="id" ngModel type="number" placeholder="תעודת זהות" #idInput="ngModel" required id>
-        <mat-error *ngIf="idInput.invalid">הכנס תעודת זהות</mat-error>
-      </mat-form-field>
+      <!--<mat-form-field>-->
+        <!--<input matInput name="id" ngModel type="number" placeholder="תעודת זהות" #idInput="ngModel" required id>-->
+        <!--<mat-error *ngIf="idInput.invalid">הכנס תעודת זהות</mat-error>-->
+      <!--</mat-form-field>-->
 
-      <mat-form-field>
-        <input matInput name="nursingHome" ngModel type="string" placeholder="בית אבות" #nursingInput="ngModel" required id>
-        <mat-error *ngIf="nursingInput.invalid">הכנס שם בית אבות</mat-error>
-      </mat-form-field>
-
-
-      <mat-form-field>
-        <input matInput name="password" ngModel type="password" placeholder="סיסמה" #passwordInput="ngModel" required>
-        <mat-error *ngIf="passwordInput.invalid">הכנס סיסמה</mat-error>
-      </mat-form-field>
+      <!--<mat-form-field>-->
+        <!--<input matInput name="password" ngModel type="password" placeholder="סיסמה" #passwordInput="ngModel" required>-->
+        <!--<mat-error *ngIf="passwordInput.invalid">הכנס סיסמה</mat-error>-->
+      <!--</mat-form-field>-->
 
 
-    </div>
-    <button mat-raised-button class="create-admin" type="submit" *ngIf="!isLoading">הוסף אדמין</button>
+    <!--</div>-->
+    <!--<button mat-raised-button class="create-admin" type="submit" *ngIf="!isLoading">הוסף אדמין</button>-->
 
-  </form>
-</mat-card>
+  <!--</form>-->
+<!--</mat-card>-->

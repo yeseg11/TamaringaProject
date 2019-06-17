@@ -8,16 +8,19 @@ import {computeStyle} from '@angular/animations/browser/src/util';
 
 const BACKEND_URL = environment.apiUrl;
 
+
+
 @Injectable({providedIn: 'root'})
 export class AuthService {
     private isAuthenticated = false;
     private isAdminAuthenticated = false;
+    private isResearcherAuthenticated = false;
     private test = '5ccfd97a8991c605c8e32f7d';
     private records: string[] = [];
     private token: string;
     private tokenTimer: any;
     private adminFlag = false;
-
+    private researcherFlag = false;
     private playlistSource = new BehaviorSubject(null);
     currentPlaylist = this.playlistSource.asObservable();
 
@@ -26,6 +29,7 @@ export class AuthService {
     // wrap a boolean because i don't really need the token in my other components - only in my interceptor
     private authStatusListener = new Subject<boolean>();
     private adminAuthStatusListener = new Subject<boolean>();
+    private researcherAuthStatusListener = new Subject<boolean>();
     private loadingListener = new Subject<boolean>();
     // private loadingListener = new Subject<boolean>();
 
@@ -45,6 +49,10 @@ export class AuthService {
         return this.isAdminAuthenticated;
     }
 
+    getIsResearcher() {
+      return this.isResearcherAuthenticated;
+    }
+
     getRecords() {
         return this.records;
     }
@@ -56,6 +64,10 @@ export class AuthService {
 
     getAdminAuthStatusListener() {
         return this.adminAuthStatusListener.asObservable();
+    }
+
+    getResearcherAuthStatusListener() {
+      return this.researcherAuthStatusListener.asObservable();
     }
 
     getLoadingStatusListener() {
@@ -77,10 +89,42 @@ export class AuthService {
             });
     }
 
+    // createResearcher(fullName: string, id: number, age: number, year: number, password: string, country: string) {
+    //   // this.researcherFlag = true;
+    //   const  authData: AuthData = {fullName, id, age, year, password, country};
+    //   this.http.post(BACKEND_URL + '/user/signup', authData)
+    //     .subscribe(response => {
+    //       console.log('response from server: ');
+    //       console.log(response);
+    //       this.loadingListener.next(true);
+    //     }, error => {
+    //       console.log(error);
+    //       // when we get error in login, we provide to login component a false boolean to stop the spinner
+    //       this.loadingListener.next(false);
+    //       console.log('researcher added');
+    //     });
+    // }
+
+    // createAdmin(fullName: string, id: number, age: number, year: number, password: string, country: string) {
+    //   // this.adminFlag = true;
+    //   const  authData: AuthData = {fullName, id, age, year, password, country };
+    //   this.http.post(BACKEND_URL + '/user/signup', authData)
+    //     .subscribe(response => {
+    //       console.log('response from server: ');
+    //       console.log(response);
+    //       this.loadingListener.next(true);
+    //     }, error => {
+    //       console.log(error);
+    //       // when we get error in login, we provide to login component a false boolean to stop the spinner
+    //       this.loadingListener.next(false);
+    //     });
+    // }
+
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
-        this.http.post<{ token: string, expiresIn: number, userDbId: string, userName: string, playlist, userId: string }>
+        this.http.post<{ token: string, expiresIn: number, userDbId: string, userName: string,
+                        playlist, userId: string, country: string, age: number }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
                 // console.log(typeof (response.playlist));
@@ -112,14 +156,21 @@ export class AuthService {
                     this.loadingListener.next(true);
 
                     if (response.userDbId === this.test) {
-
                         this.adminFlag = true;
                         localStorage.setItem('admin', String(this.adminFlag));
-
                         this.isAdminAuthenticated = true;
                         this.adminAuthStatusListener.next(true);
+                     }
+                    //  IF RESEARCHER !!!!!
+                    console.log('country ', response.country );
+                    if (response.country === 'researcher') {
+                      localStorage.setItem('researcher', String(this.researcherFlag));
+                      this.isResearcherAuthenticated = true;
+                      this.researcherAuthStatusListener.next(true);
+                      this.researcherFlag = true;
+                      console.log('researcher logged in');
                     }
-                    // console.log(this.adminFlag);
+                    console.log(this.adminFlag);
                     localStorage.setItem('userName', response.userName);
 
                     const now = new Date();
@@ -129,6 +180,8 @@ export class AuthService {
 
                     if (this.adminFlag) {
                         this.router.navigate(['/admin']);
+                    } else if (this.researcherFlag) {
+                      this.router.navigate(['/researcher']);
                     } else {
                         // reach out to my router to navigate back to the home page
                         this.router.navigate(['/user']);
@@ -183,10 +236,13 @@ export class AuthService {
         this.token = null;
         this.isAuthenticated = false;
         this.isAdminAuthenticated = false;
+        this.isAdminAuthenticated = false;
+        this.researcherFlag = false;
         this.adminFlag = false;
         // pass that information to anyone who is interested
         this.authStatusListener.next(false); // false because the user in now not authenticated anymore
         this.adminAuthStatusListener.next(false);
+        this.researcherAuthStatusListener.next(false);
         this.clearAuthDta();
         clearTimeout(this.tokenTimer);
         // reach out to my router to navigate back to the home page
@@ -201,7 +257,7 @@ export class AuthService {
         }, duration * 1000);
     }
 
-    // private method that called only from this service that responsabile on saving the token in the local storage
+    // private method that called only from this service that responsible on saving the token in the local storage
     private saveAuthData(token: string, expirationDate: Date) {
         // stores the data to local storage
         localStorage.setItem('token', token);
@@ -216,6 +272,7 @@ export class AuthService {
         localStorage.removeItem('admin');
         localStorage.removeItem('userName');
         localStorage.removeItem('id');
+        localStorage.removeItem('researcher');
     }
 
     // get my data from the local storage

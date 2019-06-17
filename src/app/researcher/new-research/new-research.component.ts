@@ -12,16 +12,21 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./new-research.component.css']
 })
 export class NewResearchComponent implements OnInit {
-  usersList = new FormControl();
-  toppingList: string[] = ['Yona', 'David', 'Miriam', 'Lea', 'Stella'];
+  // usersList = new FormControl();
   research: ResearchData;
   private mode = 'create';
   private researchId: string;
   private usersSub: Subscription;
+  public participants: any;
+  public variables: any;
+  private sDate: string;
+  private eDate: string;
   userNames: string[] = [];
   users: AuthData[] = [];
 
-  constructor(public researchesService: ResearchService, public route: ActivatedRoute) { }
+
+  constructor(public researchesService: ResearchService, public route: ActivatedRoute) {
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -52,13 +57,15 @@ export class NewResearchComponent implements OnInit {
       console.log('invalid form');
       return;
     }
+    this.sDate = form.value.startDate.getDay() + '/' + form.value.startDate.getMonth() + '/' + form.value.startDate.getFullYear();
+    this.eDate = form.value.endDate.getDay() + '/' + form.value.endDate.getMonth() + '/' + form.value.endDate.getFullYear();
     this.researchesService.createResearch(form.value.id,
                                           form.value.name,
-                                          form.value.usersList,
+                                          form.value.participants,
                                           form.value.process,
                                           form.value.variables,
-                                          form.value.startDate,
-                                          form.value.endDate);
+                                          this.sDate,
+                                          this.eDate);
     console.log('server: createResearch()');
     form.resetForm();
   }

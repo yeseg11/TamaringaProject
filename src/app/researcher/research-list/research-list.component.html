@@ -1,13 +1,19 @@
 <mat-accordion multi="true" *ngIf="researches.length > 0" xmlns:componentDef="http://www.w3.org/1999/xhtml"> <!--multi="true" - we can open more than one expansion-->
 <!--<mat-accordion multi="true" >-->
   <mat-expansion-panel *ngFor="let research of researches">
-    <mat-expansion-panel-header>
+    <mat-expansion-panel-header >
       {{ research.name }}
     </mat-expansion-panel-header>
-    <p>{{ research.process }}</p>
-    <p>{{ research.variables }}</p>
-    <p>{{ research.startDate }}</p>
-    <p>{{ research.endDate }}</p>
+    <p class="title">Praticipants:</p>
+    <p *ngFor="let participant of  research.participants " >- {{ participant }}</p>
+    <p class="title" >Process: </p>
+    <p> {{ research.process }}</p>
+    <p class="title">Variables: </p>
+    <p> {{ research.variables }}</p>
+    <p class="title">Start date: </p>
+    <p> {{ research.startDate }}</p>
+    <p class="title">End date: </p>
+    <p> {{ research.endDate }}</p>
     <mat-action-row>
       <button mat-button color="primary">EDIT</button>
       <button mat-button color="warn" (click)="onDelete(research.id)">DELETE</button>

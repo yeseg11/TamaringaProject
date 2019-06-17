@@ -1,0 +1,38 @@
+:host {
+  display: block;
+  margin-top: 1rem;
+}
+mat-form-field,
+textarea {
+  width: 100%;
+}
+
+mat-card {
+  width: 30%;
+  margin: auto;
+
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+  /*border: 3px solid #cccccc;*/
+}
+
+.example-container > * {
+  width: 100%;
+  margin: auto;
+  text-align: right;
+
+}
+
+.create-researcher {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+button {
+  background-color: #0d0d0d;
+  color: white;
+}

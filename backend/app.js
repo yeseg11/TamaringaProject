@@ -144,7 +144,7 @@ app.post("/api/user/login", async (req, res) => {
     //     });
     // }
     // console.log(process.env.JWT_KEY);
-    const token = jwt.sign(
+    const token = await jwt.sign(
         {id: user.id, userId: user._id},
         process.env.JWT_KEY,
         {expiresIn: "1h"}
@@ -157,21 +157,20 @@ app.post("/api/user/login", async (req, res) => {
         userDbId: user._id,
         userId: user.id,
         userName: user.fullName,
-        playlist: playlist
+        playlist: playlist,
+        country: user.country,
+        age: user.age
     });
 });
 
 
-app.get("/api/user/users", (req, res, next) => {
-  User.find().then(users => {
+app.get("/api/user/users", async (req, res) => {
 
-    console.log('users:44444444444444444444444444444444444444444444444      ', users);
-    console.log('type:' + typeof (users));
+    const users = await User.find();
     res.status(200).json({
       message: "users fetched successfully",
       users: users,
     });
-  });
 });
 
 // ==========================================================
@@ -210,60 +209,52 @@ app.get("/api/user/users", (req, res, next) => {
  * @PARAM {Date*} startDate: Given research startDate
  * @PARAM {Date*} endDate: Given research endDate
  */
-app.post("/api/researcher/new-research", (req, res, next) => {
+
+
+
+app.post("/api/researcher/new-research", async (req, res) => {
     // console.log("id1: ", req.body.id);
-    const research = new Research({
+    const research = await new Research({
         name: req.body.name,
         id: req.body.id,
-        // participants: req.body.participants,
+        participants: req.body.participants,
         process: req.body.process,
         variables: req.body.variables,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
     });
-    research.save()
-        .then(result => {
-            // console.log(result);
-            // console.log("id2: ", req.body.id);
-            res.status(201).json({
-                message: 'Research created!',
-                researchId: result._id //we send the result data so we can see what's inside there
-            });
-        })
-        .catch(err => {
-            // console.log(err);
-            res.status(500).json({
-                message: 'Creating a research failed!'
-            });
-        });
-    // });
+    console.log(research);
+    research.save();
+    res.status(201).json({
+        message: 'Research created!',
+        researchId: result._id //we send the result data so we can see what's inside there
+    });
 });
 
 /** -------------------------------------------------------------------------
  * Return an object of all the researches
  *  @PARAM {Object*} researches: researches array
  */
-app.get("/api/researcher/new-research", (req, res, next) => {
-    Research.find().then(documents => {
-        // console.log(documents);
-        // console.log('type:' + typeof (documents));
-        res.status(200).json({
-            message: "Researches fetched successfully",
-            researches: documents
-        });
+app.get("/api/researcher/new-research", async (req, res) => {
+    const document = await Research.find();
+    // console.log(documents);
+    // console.log('type:' + typeof (documents));
+    res.status(200).json({
+        message: "Researches fetched successfully",
+        researches: document
     });
+    console.log('document: ', document);
 });
 
 /** -------------------------------------------------------------------------
  * Delete a specific research by ID
  *  @PARAM {String*} _id: Given research id
  */
-app.delete("/api/researcher/new-research/:id", (req, res, next) => {
-    Research.deleteOne({_id: req.params.id}).then(result => {
-        console.log(result);
+app.delete("/api/researcher/new-research/:id", async (req, res, next) => {
+    const result = await Research.deleteOne({_id: req.params.id});
+        // console.log(result);
         res.status(200).json({message: "Research deleted"});
-    })
-});
+    });
 
 module.exports = app;
 

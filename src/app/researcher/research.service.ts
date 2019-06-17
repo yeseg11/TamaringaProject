@@ -16,6 +16,7 @@ export class ResearchService {
   private researchesUpdated = new Subject<ResearchData[]>();
   private usersUpdated = new Subject<AuthData[]>();
   private userNames: string[] = [];
+  private flag = true;
   constructor(private http: HttpClient, private router: Router) {
   }
 
@@ -67,21 +68,9 @@ export class ResearchService {
    * @PARAM {Date*} startDate: Given research startDate
    * @PARAM {Date*} endDate: Given research endDate
    */
-  createResearch(id: null,
-                 name: string,
-                 participants: string,
-                 process: string,
-                 variables: string,
-                 startDate: Date,
-                 endDate: Date) {
+  createResearch(id: null, name: string, participants: string[], process: string, variables: string, startDate: string, endDate: string) {
     // create a const that save the user input
-    const researchData: ResearchData = {id: id,
-                                        name: name,
-                                        participants: participants,
-                                        process: process,
-                                        variables: variables,
-                                        startDate: startDate,
-                                        endDate: endDate};
+    const researchData: ResearchData = {id, name, participants,  process, variables, startDate, endDate};
     this.http.post<{ message: string, researchId: string}>(BACKEND_URL + '/researcher/new-research', researchData)
       .subscribe(response => {
         const researchId = response.researchId;
@@ -92,7 +81,7 @@ export class ResearchService {
         this.researchesUpdated.next([...this.researches]);
         console.log('new research: ', researchData);
       });
-    // add the research to an array of researches like in
+    // add the research to an array of researches
   }
 
   /** -------------------------------------------------------------------------
@@ -121,8 +110,18 @@ export class ResearchService {
       .subscribe(response => {
         const userRes = response.users;
         for ( const user of userRes ) {
-          this.userNames.push(user.fullName);
+          for ( const userExist of this.userNames ) {
+            if ( user.fullName === userExist ) {
+              this.flag = false;
+            } else {
+              this.flag = true;
+            }
+          }
+          if ( this.flag === true ) {
+            this.userNames.push(user.fullName);
+          }
         }
+        this.flag = true;
       });
     console.log('users names: ', this.userNames);
     return this.userNames;

@@ -1,17 +1,17 @@
-/*.container{*/
-  /*display: flex;*/
-  /*flex-direction: row;*/
-/*}*/
-/*.videoList {*/
-  /*display: flex;*/
-  /*justify-content: space-around;*/
-/*}*/
-
+mat-card {
+  width: 30%;
+  margin: auto;
+}
+.videoList {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 50%;
+}
 .videos {
   display: flex;
   flex-direction: column;
   justify-content: center;
-
 }
 
 .ratingLabel {

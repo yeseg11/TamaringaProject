@@ -3,6 +3,14 @@
   margin-top: 1rem;
 }
 
+mat-expansion-panel-header {
+  font-size: larger;
+  text-decoration: underline;
+}
+
+.title {
+  font-size: larger;
+}
 .info-text{
   text-align: center;
 }

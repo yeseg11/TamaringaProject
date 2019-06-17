@@ -1,0 +1,25 @@
+<mat-card>
+  <mat-spinner *ngIf="isLoading"></mat-spinner>
+  <form (submit)="onAddResearcher(addResearcherForm)" #addResearcherForm="ngForm" >
+    <div class="example-container">
+      <mat-form-field>
+        <input matInput name="fullName" ngModel type="text" placeholder="שם מלא" #idInput="ngModel" required>
+        <mat-error *ngIf="idInput.invalid">הכנס שם</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="id" ngModel type="number" placeholder="תעודת זהות" #idInput="ngModel" required id>
+        <mat-error *ngIf="idInput.invalid">הכנס תעודת זהות</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput name="password" ngModel type="password" placeholder="סיסמה" #passwordInput="ngModel" required>
+        <mat-error *ngIf="passwordInput.invalid">הכנס סיסמה</mat-error>
+      </mat-form-field>
+
+
+    </div>
+    <button mat-raised-button class="create-researcher" type="submit" *ngIf="!isLoading">הוסף חוקר</button>
+
+  </form>
+</mat-card>

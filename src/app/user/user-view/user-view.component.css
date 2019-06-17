@@ -6,7 +6,7 @@
 
 h1 {
   text-align: center;
-  color: midnightblue;
+  color: black;
 }
 
 .title{
@@ -24,3 +24,9 @@ p {
   font-weight: bold;
 }
 
+main {
+  /*width: 80%;*/
+  /*margin: 1rem auto;*/
+  background-image: url(../../../assets/img/background6.jpeg);
+  /*height: 100%;*/
+}
