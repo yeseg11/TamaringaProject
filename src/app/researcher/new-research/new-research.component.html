@@ -3,87 +3,85 @@
 
   <form  (submit)="onAddResearch(addResearchForm)" #addResearchForm="ngForm">
     <div class="example-container">
-    <p>יצירת מחקר חדש</p>
-    <mat-form-field>
-      <input
-        matInput
-        type="text"
-        name="name"
-        ngModel
-        placeholder="שם המחקר"
-        required
-        #name="ngModel">
-      <mat-error *ngIf="name.invalid">הכנס שם</mat-error>
-    </mat-form-field>
-
-
-    <!--<mat-form-field>-->
-      <!--<mat-label>Toppings</mat-label>-->
-      <!--<mat-select name="participants" [formControl]="toppings" multiple>-->
-        <!--<mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}} </mat-option>-->
-      <!--</mat-select>-->
-    <!--</mat-form-field>-->
+      <p>יצירת מחקר חדש</p>
       <mat-form-field>
-        <mat-label>משתתפים</mat-label>
-        <mat-select name="participants" [(ngModel)]="participants" multiple>
-          <mat-option *ngFor="let user of userNames" [value]="user">{{user}} </mat-option>
-        </mat-select>
+        <input
+          matInput
+          type="text"
+          name="name"
+          ngModel
+          placeholder="שם המחקר"
+          required
+          #name="ngModel">
+        <mat-error *ngIf="name.invalid">הכנס שם</mat-error>
       </mat-form-field>
 
 
-    <mat-form-field>
-      <textarea
-        matInput
-        type="text"
-        name="process"
-        ngModel
-        placeholder="אופן מהלך המחקר"
-        required
-        #process="ngModel">
-      </textarea>
-      <mat-error *ngIf="process.invalid">הכנס תהליך</mat-error>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>משתני המחקר</mat-label>
-      <mat-select name="variables" [(ngModel)]="variables" required>
-        <mat-option>None</mat-option>
-        <mat-option value="basic">אלגוריתם בסיסי</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input
-        matInput
-        class="dates"
-        name="startDate"
-        ngModel
-        [matDatepicker]="start"
-        placeholder="תחילת מחקר"
-        required
-        #startDate="ngModel">
-      <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
-      <mat-datepicker #start></mat-datepicker>
-      <mat-error *ngIf="startDate.invalid">בחר תאריך התחלה</mat-error>
-    </mat-form-field>
-
-    <mat-form-field >
-      <input
-        matInput
-        class="dates"
-        name="endDate"
-        ngModel
-        [matDatepicker]="end"
-        placeholder="סוף מחקר"
-        required
-        #endDate="ngModel">
-      <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
-      <mat-datepicker #end></mat-datepicker>
-      <mat-error *ngIf="endDate.invalid">בחר תאריך סוף</mat-error>
-    </mat-form-field>
+      <!--<mat-form-field>-->
+        <!--<mat-label>Toppings</mat-label>-->
+        <!--<mat-select name="participants" [formControl]="toppings" multiple>-->
+          <!--<mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}} </mat-option>-->
+        <!--</mat-select>-->
+      <!--</mat-form-field>-->
+        <mat-form-field>
+          <mat-label>משתתפים</mat-label>
+          <mat-select name="participants" [(ngModel)]="participants" multiple>
+            <mat-option *ngFor="let user of userNames" [value]="user">{{user}} </mat-option>
+          </mat-select>
+        </mat-form-field>
 
 
+      <mat-form-field>
+        <textarea
+          matInput
+          type="text"
+          name="process"
+          ngModel
+          placeholder="אופן מהלך המחקר"
+          required
+          #process="ngModel">
+        </textarea>
+        <mat-error *ngIf="process.invalid">הכנס תהליך</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>משתני המחקר</mat-label>
+        <mat-select name="variables" [(ngModel)]="variables" required>
+          <mat-option value="אלגוריתם בסיסי">אלגוריתם בסיסי</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          matInput
+          class="dates"
+          name="startDate"
+          ngModel
+          [matDatepicker]="start"
+          placeholder="תחילת מחקר"
+          required
+          #startDate="ngModel">
+        <mat-datepicker-toggle matSuffix [for]="start"></mat-datepicker-toggle>
+        <mat-datepicker #start></mat-datepicker>
+        <mat-error *ngIf="startDate.invalid">בחר תאריך התחלה</mat-error>
+      </mat-form-field>
+
+      <mat-form-field >
+        <input
+          matInput
+          class="dates"
+          name="endDate"
+          ngModel
+          [matDatepicker]="end"
+          placeholder="סוף מחקר"
+          required
+          #endDate="ngModel">
+        <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+        <mat-datepicker #end></mat-datepicker>
+        <mat-error *ngIf="endDate.invalid">בחר תאריך סוף</mat-error>
+      </mat-form-field>
     </div>
+
     <button
       class="create-research"
       mat-flat-button

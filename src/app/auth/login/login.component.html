@@ -7,56 +7,25 @@
 
 <div class="wrapper fadeInDown" >
   <div id="formContent">
-    <!-- Tabs Titles -->
-
-    <!-- Icon -->
-    <!--<div class="fadeIn first">-->
-      <!--<img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />-->
-    <!--</div>-->
-
-<!-- =========================================================
-   -->
     <mat-card>
-      <!-- <mat-spinner></mat-spinner> -->
       <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
-
         <mat-form-field>
-          <input matInput name="id" ngModel type="number" placeholder="ID" #IdInput="ngModel" required id>
+          <input class="input" matInput name="id" ngModel type="number" placeholder="תעודת זהות" #IdInput="ngModel" required id>
           <mat-error *ngIf="IdInput.invalid">Please enter a valid ID.</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput name="password" ngModel type="password" placeholder="Password" #passwordInput="ngModel" required>
+          <input class="input" matInput name="password" ngModel type="password" placeholder="סיסמה" #passwordInput="ngModel" required>
           <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
         </mat-form-field>
 
-        <button mat-raised-button type="submit" *ngIf="!isLoading">Login</button>
+        <button mat-raised-button type="submit" *ngIf="!isLoading">התחבר/י</button>
 
         <!-- <a routerLink="/admin"><input type="submit" class="fadeIn fourth" value="אדמין"></a> -->
 
         <mat-spinner *ngIf="isLoading"></mat-spinner>
-
-        <!-- Remind Passowrd -->
-        <div id="formFooter">
-          <a class="underlineHover" href="#">?שכחת סיסמה</a>
-        </div>
-
       </form>
     </mat-card>
-
-<!-- ============================================================ -->
-
-    <!--&lt;!&ndash; Login Form &ndash;&gt;-->
-    <!--<form>-->
-      <!--<input type="text" id="login" class="fadeIn second" name="login" placeholder="תעודת זהות">-->
-      <!--<input type="password" id="password" class="fadeIn third" name="login" placeholder="סיסמה">-->
-      <!--<a routerLink="/user"><input type="submit" class="fadeIn fourth" value="התחבר"></a>-->
-
-      <!--<a routerLink="/admin"><input type="submit" class="fadeIn fourth" value="אדמין"></a>-->
-    <!--</form>-->
-
-
-
   </div>
 </div>
 </body>

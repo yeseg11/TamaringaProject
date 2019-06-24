@@ -111,7 +111,7 @@
       </mat-select>
     </mat-form-field>
     </div>
-    <button mat-raised-button class="create-user" type="submit" *ngIf="!isLoading">הוסף משתמש</button>
+    <button mat-raised-button class="create-user" type="submit" *ngIf="!isLoading" (click)="openSnackBar()">הוסף משתמש</button>
 
   </form>
 </mat-card>

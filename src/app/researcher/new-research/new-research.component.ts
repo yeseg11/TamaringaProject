@@ -5,6 +5,7 @@ import {ResearchData} from '../research-data.model';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {AuthData} from '../../auth/auth-data.model';
 import {Subscription} from 'rxjs';
+import {AuthService} from '../../auth/auth.service';
 
 @Component({
   selector: 'app-new-research',
@@ -21,11 +22,12 @@ export class NewResearchComponent implements OnInit {
   public variables: any;
   private sDate: string;
   private eDate: string;
+  public entrance: number;
   userNames: string[] = [];
   users: AuthData[] = [];
 
 
-  constructor(public researchesService: ResearchService, public route: ActivatedRoute) {
+  constructor(public researchesService: ResearchService, public authService: AuthService, public route: ActivatedRoute) {
   }
 
   ngOnInit() {

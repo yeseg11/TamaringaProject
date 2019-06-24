@@ -6,10 +6,16 @@
 mat-expansion-panel-header {
   font-size: larger;
   text-decoration: underline;
+  text-align: right;
 }
 
 .title {
   font-size: larger;
+  text-align: right;
+}
+
+.content {
+  text-align: right;
 }
 .info-text{
   text-align: center;

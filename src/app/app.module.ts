@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 // import of Angular Material Components that used for project
 import {
@@ -90,7 +91,9 @@ import { NewResearcherComponent } from './admin/new-researcher/new-researcher.co
     CommonModule,
     MatButtonToggleModule,
     MatIconModule,
-  ],
+    MatSnackBarModule
+
+],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app
     MatDatepickerModule,

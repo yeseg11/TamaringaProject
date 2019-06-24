@@ -1,12 +1,14 @@
 mat-card {
   width: 30%;
   margin: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 .videoList {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 50%;
+  width: 45%;
 }
 .videos {
   display: flex;
