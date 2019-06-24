@@ -4,7 +4,6 @@ import {AuthData, AuthDataLogin} from './auth-data.model';
 import {Subject, BehaviorSubject} from 'rxjs';
 import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
-import {computeStyle} from '@angular/animations/browser/src/util';
 
 const BACKEND_URL = environment.apiUrl;
 
@@ -21,6 +20,7 @@ export class AuthService {
     private researcherFlag = false;
     private playlistSource = new BehaviorSubject(null);
     currentPlaylist = this.playlistSource.asObservable();
+    public items;
 
     // that will actually be a new subject imported from rxjs and i'll use that subject
     // to push the authentication information to the components which are interested.
@@ -29,6 +29,7 @@ export class AuthService {
     private adminAuthStatusListener = new Subject<boolean>();
     private researcherAuthStatusListener = new Subject<boolean>();
     private loadingListener = new Subject<boolean>();
+
     // private loadingListener = new Subject<boolean>();
 
     constructor(private http: HttpClient, private router: Router) {
@@ -48,7 +49,7 @@ export class AuthService {
     }
 
     getIsResearcher() {
-      return this.isResearcherAuthenticated;
+        return this.isResearcherAuthenticated;
     }
 
     getRecords() {
@@ -65,7 +66,7 @@ export class AuthService {
     }
 
     getResearcherAuthStatusListener() {
-      return this.researcherAuthStatusListener.asObservable();
+        return this.researcherAuthStatusListener.asObservable();
     }
 
     getLoadingStatusListener() {
@@ -87,52 +88,16 @@ export class AuthService {
             });
     }
 
-    // createResearcher(fullName: string, id: number, age: number, year: number, password: string, country: string) {
-    //   // this.researcherFlag = true;
-    //   const  authData: AuthData = {fullName, id, age, year, password, country};
-    //   this.http.post(BACKEND_URL + '/user/signup', authData)
-    //     .subscribe(response => {
-    //       console.log('response from server: ');
-    //       console.log(response);
-    //       this.loadingListener.next(true);
-    //     }, error => {
-    //       console.log(error);
-    //       // when we get error in login, we provide to login component a false boolean to stop the spinner
-    //       this.loadingListener.next(false);
-    //       console.log('researcher added');
-    //     });
-    // }
-
-    // createAdmin(fullName: string, id: number, age: number, year: number, password: string, country: string) {
-    //   // this.adminFlag = true;
-    //   const  authData: AuthData = {fullName, id, age, year, password, country };
-    //   this.http.post(BACKEND_URL + '/user/signup', authData)
-    //     .subscribe(response => {
-    //       console.log('response from server: ');
-    //       console.log(response);
-    //       this.loadingListener.next(true);
-    //     }, error => {
-    //       console.log(error);
-    //       // when we get error in login, we provide to login component a false boolean to stop the spinner
-    //       this.loadingListener.next(false);
-    //     });
-    // }
-
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
-        this.http.post<{ token: string, expiresIn: number, userDbId: string, userName: string,
-                        playlist, userId: string, country: string, age: number, entrance: number }>
+        this.http.post<{
+            token: string, expiresIn: number, userDbId: string, userName: string, isVoted: boolean,
+            playlist, userId: string, country: string, age: number, entrance: number, items
+        }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
-                // console.log(typeof (response.playlist));
-                this.updatePlaylist(response.playlist);
-                // const recRes = response.records;
-                // // dismantle the records Object into string array of videoId
-                // for (const rec of recRes) {
-                //     this.records.push(rec.youtube.videoId);
-                // }
-                // console.log(recRes);
+                console.log(response);
 
                 // we'll actually get back a response object which has token field which is of type string (as we created in the API)
                 const token = response.token;
@@ -158,18 +123,29 @@ export class AuthService {
                         localStorage.setItem('admin', String(this.adminFlag));
                         this.isAdminAuthenticated = true;
                         this.adminAuthStatusListener.next(true);
-                     }
+                    }
                     //  IF RESEARCHER !!!!!
-                    console.log('country ', response.country );
+                    console.log('country ', response.country);
                     if (response.country === 'researcher') {
-                      localStorage.setItem('researcher', String(this.researcherFlag));
-                      this.isResearcherAuthenticated = true;
-                      this.researcherAuthStatusListener.next(true);
-                      this.researcherFlag = true;
-                      console.log('researcher logged in');
+                        localStorage.setItem('researcher', String(this.researcherFlag));
+                        this.isResearcherAuthenticated = true;
+                        this.researcherAuthStatusListener.next(true);
+                        this.researcherFlag = true;
+                        console.log('researcher logged in');
                     }
                     localStorage.setItem('entrance', String(response.entrance));
                     localStorage.setItem('userName', response.userName);
+                    localStorage.setItem('isVoted', String(response.isVoted));
+
+                    console.log('response.entrance', response.entrance);
+                    // if (response.entrance === 0) {
+                    this.updatePlaylist(response.playlist);
+                    this.items = response.items;
+                    console.log(this.items);
+
+                    // } else {
+                    // localStorage.setItem('notEar', JSON.stringify(response.items[0].notEar));
+                    // }
 
                     const now = new Date();
                     const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
@@ -179,7 +155,7 @@ export class AuthService {
                     if (this.adminFlag) {
                         this.router.navigate(['/admin']);
                     } else if (this.researcherFlag) {
-                      this.router.navigate(['/researcher']);
+                        this.router.navigate(['/researcher']);
                     } else {
                         // reach out to my router to navigate back to the home page
                         this.router.navigate(['/user']);
@@ -206,9 +182,9 @@ export class AuthService {
     addVote(rate: number, userId: number, ytId: string) {
         // console.log(rate, userId, ytId);
         this.http.get(BACKEND_URL + '/user/' + userId + '/youtube/' + ytId + '/rate/' + rate)
-            .subscribe( response => {
+            .subscribe(response => {
                 console.log(response);
-        });
+            });
 
     }
 

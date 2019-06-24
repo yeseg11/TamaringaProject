@@ -63,7 +63,8 @@ app.post("/api/user/signup", async (req, res) => {
         password: req.body.password,
         group: req.body.country + req.body.year,
         entrances: 0,
-        songs: []
+        songs: [],
+        isVoted: false
     });
     let saveUSer = await user.save(); //we have to handle this promise
     // let saveUSer = user.save()
@@ -86,31 +87,17 @@ app.post("/api/user/signup", async (req, res) => {
         records: records
     };
 
-
-    ////////////
-    // const pl = new Playlist({
-    //     name: saveUSer.group,
-    //     year: req.body.year,
-    //     country: req.body.country,
-    //     records: records
-    // });
-    // console.log('pl:\n', pl,'\n\n');
-    // let savePl = await pl.save(); //we have to handle this promise
-    // console.log('savePl:\n', savePl,'\n\n');
-
-    ////////////
-    // console.log('records:\n', playlist.records[0],'\n\n');
-    // console.log('playlist:\n\n', playlist,'\n\n');
+    // console.log('playlist:\n', playlist, '\n\n');
 
     const query = {name: playlist.name};
     const update = playlist;
-    const options = {upsert: true, new: true, setDefaultsOnInsert: true};
+    const options = {upsert: true, new: true, setDefaultsOnInsert: true,  useFindAndModify: false};
 
     let playlistIsExist = true;
 
     let playlistFound = await Playlist.findOne({name: playlist.name});
     // playlist ins't found, then create new one.
-    // console.log('playlistFound1:\n', playlistFound,'\n\n');
+     // console.log('playlistFound1:\n', playlistFound,'\n\n');
 
     if (!playlistFound) {
         playlistIsExist = false;
@@ -124,10 +111,9 @@ app.post("/api/user/signup", async (req, res) => {
             });
         }
     }
-    console.log('playlistFound2:\n', playlistFound, '\n\n');
+    // console.log('playlistFound2:\n', playlistFound, '\n\n');
 
     res.status(201).json({
-        // records: records,
         user: saveUSer,
         playlist: playlistFound,
     });
@@ -135,8 +121,11 @@ app.post("/api/user/signup", async (req, res) => {
 // ======================test login==========================
 
 app.post("/api/user/login", async (req, res) => {
+
     const user = await User.findOne({id: req.body.id});
-    // console.log(user);
+    // console.log("user:\n", user, "\n\n");
+    // console.log("FullName:\n", user.fullName, "\n\n");
+
     if (!user) {
         return res.status(401).json({
             message: "User is not found!"
@@ -144,11 +133,14 @@ app.post("/api/user/login", async (req, res) => {
     }
     if (user.password !== req.body.password) {
         return res.status(401).json({
-            message: "Invalid authentication credentials!"
+            message: "Invalid authentication credentials!1"
         });
     }
-    user.entrances += 1;
-    await user.save();
+    const isUserVoted = user.isVoted;
+    let firstEntranceFlag = false;
+    if (user.entrances === 0) {
+        firstEntranceFlag = true;
+    }
 
     const playlist = await Playlist.findOne({name: user.group});
     if (!playlist) {
@@ -157,34 +149,169 @@ app.post("/api/user/login", async (req, res) => {
         });
     }
 
-    // const records = await Record.find({year: {$gt: user.year - 3, $lt: user.year + 3}}).limit(20);
-    // // console.log(records);
-    // if (!records) {
-    //     return res.status(401).json({
-    //         message: "Find record failed"
-    //     });
-    // }
-    // console.log(process.env.JWT_KEY);
     const token = await jwt.sign(
         {id: user.id, userId: user._id},
         process.env.JWT_KEY,
         {expiresIn: "1h"}
     );
 
-    res.status(200).json({
-        token: token,
-        expiresIn: 3600,
-        // records: records,
-        userDbId: user._id,
-        userId: user.id,
-        userName: user.fullName,
-        playlist: playlist,
-        country: user.country,
-        age: user.age,
-        entrance : user.entrances
-    });
-});
 
+
+     // ===================================================================================
+     // ===================================================================================
+     // ===================================================================================
+    console.log("user.entrances\n", user.entrances, "\n\n");
+
+    // Return and update the user best song, the recommended user best songs and the unseen user song
+    // enter only if the user is already voted for any song.
+    if (!firstEntranceFlag && isUserVoted)
+    {
+        console.log("1");
+        const id = req.body.id;
+        Playlist.find({name: user.group}).exec(async function (err, docs) {
+            console.log("records.votes.userId\n", docs, "\n\n");
+            if (err) {
+                console.log("records.votes.userId\n", err, "\n\n");
+                return res.status(401).json({
+                    message: "playlist is not found!"
+                });
+            }
+
+            var topUser = [];
+            var notEar = [];
+            docs[0].records.forEach(function callback(currentValue, index, rec) {
+                var index = index;
+                var o = currentValue.votes.filter(x => x.userId == id);
+                var ex = currentValue.votes.findIndex(x => x.userId == id);
+                //console.log(rec);
+                //console.log("rec\n",rec,"\n\n");
+                if (ex != -1) {
+                    //console.log(rec[index]);
+                    //console.log(index);
+                    //console.log(currentValue.votes.filter(x=>x.userId == id));
+                    //console.log(currentValue.votes.findIndex(x=>x.userId == id));
+                    topUser.push({
+                        index: index,
+                        vote: o[0].vote,
+                        mbid: rec[index].mbid,
+                        artist: rec[index].artist[0].name,
+                        title: rec[index].title,
+                        videoId: rec[index].youtube.videoId
+                    });
+                } else {
+                    notEar.push({
+                        index: index,
+                        vote: 0,
+                        mbid: rec[index].mbid,
+                        artist: rec[index].artist[0].name,
+                        title: rec[index].title,
+                        videoId: rec[index].youtube.videoId
+                    });
+                }
+            });
+            topUser.sort(function (a, b) {
+                return b.vote - a.vote;
+            });
+
+            var topUsers = [];
+            if (docs[0].similarity.length != 0) {
+                docs[0].similarity.forEach(function callback(currentValue, index, rec) {
+                    if (currentValue.user1 == id || currentValue.user2 == id) {
+                        //console.log(currentValue);
+                        topUsers.push({
+                            user1: currentValue.user1,
+                            user2: currentValue.user2,
+                            similarity: currentValue.similarity
+                        });
+                    }
+                });
+                topUsers.sort(function (a, b) {
+                    return b.similarity - a.similarity;
+                });
+
+                //console.log(topUser);
+                //console.log(topUsers);
+                //topUsers = topUsers[0];
+                console.log('topUsers:\n',topUsers, '\n\n');
+                console.log('topUsers[0]:\n',topUsers[0], '\n\n');
+                let recUser;
+                if (id == topUsers[0].user1) {
+                    console.log("14");
+                    recUser = topUsers[0].user2;
+                } else {
+                    recUser = topUsers[0].user1;
+                }
+                //console.log(recUser);
+                var recSongs = [];
+                docs[0].records.forEach(function callback(currentValue, index, rec) {
+                    var ind = index;
+                    var o = currentValue.votes.filter(x => x.userId == recUser);
+                    var ex = currentValue.votes.findIndex(x => x.userId == recUser);
+                    if (ex != -1) {
+                        //console.log(rec[index]);
+                        //console.log(o);
+                        //console.log(ex);
+                        recSongs.push({
+                            index: index,
+                            vote: o[0].vote,
+                            mbid: rec[index].mbid,
+                            artist: rec[index].artist[0].name,
+                            title: rec[index].title,
+                            videoId: rec[index].youtube.videoId
+                        });
+                    }
+                });
+                //console.log(recSongs);
+                recSongs.sort(function (a, b) {
+                    return b.vote - a.vote;
+                });
+            }
+
+            //console.log(recSongs);
+            var obj = [{topUser, recSongs, notEar}];
+            console.log("obj\n", obj, "\n\n");
+            user.entrances += 1;
+            await user.save();
+            res.status(200).json({
+                err: false,
+                items: [].concat(obj),
+                token: token,
+                expiresIn: 3600,
+                userDbId: user._id,
+                userId: user.id,
+                userName: user.fullName,
+                playlist: playlist,
+                country: user.country,
+                age: user.age,
+                entrance: user.entrances,
+                isVoted: user.isVoted
+            });
+        });
+    }
+
+    // ===================================================================================
+    // ===================================================================================
+    // ===================================================================================
+
+    // first user's login or admin/researcher login
+    if (firstEntranceFlag || !isUserVoted) {
+        console.log("2");
+        user.entrances += 1;
+        await user.save();
+        res.status(200).json({
+            token: token,
+            expiresIn: 3600,
+            userDbId: user._id,
+            userId: user.id,
+            userName: user.fullName,
+            playlist: playlist,
+            country: user.country,
+            age: user.age,
+            entrance : user.entrances,
+            isVoted: user.isVoted
+        });
+    }
+});
 
 app.get("/api/user/users", async (req, res) => {
 
@@ -194,33 +321,6 @@ app.get("/api/user/users", async (req, res) => {
       users: users,
     });
 });
-
-// ==========================================================
-// app.post("/api/user/login", (req, res, next) => {
-//     //console.log(user);
-//     User.findOne({id: req.body.id})
-//         .then(user => {
-//             console.log(user);
-//             if (!user) {
-//                 return res.status(401).json({
-//                     message: "Auth failed"
-//                 });
-//             }
-//             //return bycrypt.compare(req.body.password, user.password);
-//
-//             //creates a new token based on some input data of your choice - in our case we'll use the id and the _id that MongoDB provides for us
-//             const token = jwt.sign(
-//                 {id: user.id, userId: user._id},
-//                 'secret_this_should_be_longer',
-//                 {expiresIn: "1h"}
-//             );
-//             res.status(200).json({
-//                 token: token,
-//                 expiresIn: 3600
-//             });
-//             //console.log(res);
-//         });
-// });
 
 /** -------------------------------------------------------------------------
  * Add a new research to the database
@@ -265,7 +365,7 @@ app.get("/api/researcher/new-research", async (req, res) => {
         message: "Researches fetched successfully",
         researches: document
     });
-    console.log('document: ', document);
+    // console.log('document: ', document);
 });
 
 /** -------------------------------------------------------------------------
@@ -305,6 +405,7 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
         })
     };
     user.songs = JSON.parse(obj.songs);
+
     // console.log('user:\n', user, '\n\n================================\n');
 
     var bulk = User.collection.initializeOrderedBulkOp();
@@ -316,25 +417,26 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
         // do cosine similarity calc in 2 minutes
         // loop all songs
         var data = user.songs[0];
-        console.log('data:\n', data, '\n\n');
+        // console.log('data mbid:\n', data.mbid, '\n\n');
         var group = user.group;
-        console.log('group:\n', group, '\n\n');
+        //console.log('group:\n', group, '\n\n');
         //
         // const playlist = await Playlist.findOne({name: user.group});
         //
         // var lookup = {'name': group, 'records.mbid': data.mbid};
         // "q" holds the return obj - playlist document found
-        Playlist.findOne({name: user.group, 'records.mbId': user.songs[0].mbid}).exec(function (err, q) {
-
-            // console.log('q:\n',q,'\n\n');
+        Playlist.findOne({name: user.group, 'records.mbId': user.songs[0].mbid}).exec(async function (err, q) {
+            // if (err) return next(err);
+            console.log('q:\n', q, '\n\n');
             console.log('err:\n', err, '\n\n');
+            console.log('data mbid:\n', data.mbid, '\n\n');
 
             // return the index of the song in the records obj arr
             const pos = q.records.findIndex(e => e.mbId === data.mbid);
             q.records[pos].votes = q.records[pos].votes || [];
 
             const posUser = q.records[pos].votes.findIndex(e => e.userId === data.id);
-            console.log('posUser:\n', posUser, '\n\n');
+            //console.log('posUser:\n', posUser, '\n\n');
 
             // check if first user's vote for the voted song and then update the voting data
             if (posUser >= 0) {
@@ -373,6 +475,8 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
             });
             console.log('q.similarity:\n', q.similarity, '\n\n');
             q.markModified('similarity');
+            user.isVoted = true;
+            await user.save();
             q.save(function (err) { // Mongoose will save changes to `similarity`.
                 if (err) return next(err);
                 res.json({
@@ -387,7 +491,6 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
     //     user: user,
     // });
 });
-
 
 module.exports = app;
 

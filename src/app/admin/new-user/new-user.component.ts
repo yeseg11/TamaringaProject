@@ -32,7 +32,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
     const twentiesAge = (new Date()).getFullYear() - form.value.age + 20;
 
     this.authService.createUser(form.value.fullName, form.value.id, form.value.age, twentiesAge, form.value.password, form.value.country);
-    console.log('server: createUser()');
+    // console.log('server: createUser()');
     // this.isLoading = false;
     form.resetForm();
   }

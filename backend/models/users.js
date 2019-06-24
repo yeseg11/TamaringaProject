@@ -12,7 +12,8 @@ const userSchema = mongoose.Schema({
   country: { type: String, required: true},
   entrances: Number,
   group: String,
-  songs: []
+  songs: [],
+  isVoted: Boolean
   });
 
 //validate the unique option, before it saves it to database it will check for unique id
