@@ -4,14 +4,18 @@
   font-size: large;
 
 }
+.tabs{
+  background-color: white;
+}
 mat-tab {
-  color: #0d0d0d;
-  font-size: large;
-  font-weight: bold;
+  background-color: #0d0d0d;
+  text-decoration-color: white;
+
 }
 label {
   color: #0d0d0d;
   font-size: large;
+  font-weight: bold;
   font-weight: bold;
 }
 h1{

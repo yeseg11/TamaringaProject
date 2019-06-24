@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {AuthService} from '../../auth/auth.service';
 import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-user',
@@ -35,6 +36,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
     // console.log('server: createUser()');
     // this.isLoading = false;
     form.resetForm();
+    // this.snackBar.open('user created', 'close');
   }
 
   ngOnInit() {
@@ -47,5 +49,9 @@ export class NewUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.authStatusSub.unsubscribe();
+  }
+
+  openSnackBar() {
+
   }
 }

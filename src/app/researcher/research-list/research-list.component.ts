@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import { ResearchData } from '../research-data.model';
 import { ResearchService } from '../research.service';
 import { Subscription } from 'rxjs';
-import {AuthData} from '../../auth/auth-data.model';
 
 @Component({
   selector: 'app-research-list',

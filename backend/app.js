@@ -360,6 +360,8 @@ app.post("/api/researcher/new-research", async (req, res) => {
 app.get("/api/researcher/new-research", async (req, res) => {
     const document = await Research.find();
     // console.log(documents);
+    // console.log(documents);
+    // console.log(documents);
     // console.log('type:' + typeof (documents));
     res.status(200).json({
         message: "Researches fetched successfully",

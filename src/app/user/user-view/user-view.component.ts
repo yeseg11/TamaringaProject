@@ -14,8 +14,8 @@ export class UserViewComponent implements OnInit {
     // favoriteSeason: string;
     // seasons: string[] = ['5', '4', '3', '2', '1'];
     public records: string[] = [];
-    private userName: string;
-
+    public userName: string;
+    public userEntrance: number;
 
     //
     // getRecordsFromService() {
@@ -30,5 +30,6 @@ export class UserViewComponent implements OnInit {
 
     ngOnInit() {
         this.userName = localStorage.getItem('userName');
+        this.userEntrance = (Number(localStorage.getItem('entrance')));
     }
 }
