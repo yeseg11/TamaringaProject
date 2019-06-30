@@ -34,7 +34,7 @@ David Milstein
 ## Software Design
 * [Architecture]
 * [State charts]
-* [Sequence diagram]
+* [Sequence diagram] (docs/sequence diagram.PNG)
 * [Use cases]
 
 ## Iterations
@@ -47,12 +47,13 @@ David Milstein
 
 
 ## Development server
-Download the project and open it in your IDE.
+1. Download the files or clone the repository: 
+'git clone https://github.com/DavidMilstein/TamaringaProject.git' 
+2. Download the project and open it in your IDE (Recommended IDE: WebStorm and Visual Studio Code).
+3. Open project terminal and write 'npm install' - This command installs a package, and any packages that it depends on.
+4. In terminal, write 'ng serve' - This command builds and serves your app (cliend side), rebuilding on file changes.
+5. In terminal, write '$ node server'
 
-Install the npm packages described in the package.json and verify that it works:
-'npm install'
-
-Run 'ng serve' for a dev server. 
 
 Run 'npm run start:sever' to connect to the server and the database.
 
