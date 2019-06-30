@@ -1,24 +1,4 @@
-# TamaringaProject
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
-
-## Development server
-Download the project and open it in your IDE.
-
-Install the npm packages described in the package.json and verify that it works:
-'npm install'
-
-Run 'ng serve' for a dev server. 
-
-Run 'npm run start:sever' to connect to the server and the database.
-
-Navigate to 'http://localhost:4200/'. The app will automatically reload if you change any of the source files.
-
-# Music-Similarity
-
-
-
-<img src="https://github.com/avicohen89/Music-Similarity/blob/master/pic/music-colour-splash.jpg" height="300" width="400">
+# Tamaringa - Music recommendation System
 
 
 ## Disclaimer
@@ -64,3 +44,16 @@ David Milstein
 * [Iteration 2 alpa]
 * [Iteration 3 beta]
 * [Iteration 4 final]
+
+
+## Development server
+Download the project and open it in your IDE.
+
+Install the npm packages described in the package.json and verify that it works:
+'npm install'
+
+Run 'ng serve' for a dev server. 
+
+Run 'npm run start:sever' to connect to the server and the database.
+
+Navigate to 'http://localhost:4200/'. The app will automatically reload if you change any of the source files.
