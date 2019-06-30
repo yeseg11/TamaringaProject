@@ -32,17 +32,17 @@ David Milstein
 
 
 ## Software Design
-* [Architecture](https://github.com/DavidMilstein/TamaringaProject/docs/architecture.PNG)
-* [State charts](https://github.com/DavidMilstein/TamaringaProject/docs/statechart.PNG)
-* [Sequence diagram](https://github.com/DavidMilstein/TamaringaProject/docs/sequence%20diagram.PNG)
+* [Architecture](https://github.com/DavidMilstein/TamaringaProject/blob/master/docs/architecture.PNG)
+* [State charts](https://github.com/DavidMilstein/TamaringaProject/blob/master/docs/statechart.PNG)
+* [Sequence diagram](https://github.com/DavidMilstein/TamaringaProject/blob/master/docs/sequence%20diagram.PNG)
 
 ## Iterations
 
 * [Iteration 0 ZFR]
 * [Iteration 1 MVP]
-* [Iteration 2 alpa](https://github.com/DavidMilstein/TamaringaProject/docs/alpha.docx)
-* [Iteration 3 beta](https://github.com/DavidMilstein/TamaringaProject/docs/beta.pdf)
-* [Iteration 4 final](https://github.com/DavidMilstein/TamaringaProject/docs/final.docx)
+* [Iteration 2 alpa](https://github.com/DavidMilstein/TamaringaProject/blob/master/docs/alpha.docx)
+* [Iteration 3 beta](https://github.com/DavidMilstein/TamaringaProject/blob/master/docs/beta.pdf)
+* [Iteration 4 final](https://github.com/DavidMilstein/TamaringaProject/blob/master/docs/final.docx)
 
 
 ## Development server
