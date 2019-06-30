@@ -40,9 +40,9 @@ David Milstein
 
 * [Iteration 0 ZFR]
 * [Iteration 1 MVP]
-* [Iteration 2 alpa](https://github.com/DavidMilstein/TamaringaProject/docs/docs/alpha.docx)
-* [Iteration 3 beta](https://github.com/DavidMilstein/TamaringaProject/docs/docs/beta.pdf)
-* [Iteration 4 final](https://github.com/DavidMilstein/TamaringaProject/docs/docs/final.docx)
+* [Iteration 2 alpa](https://github.com/DavidMilstein/TamaringaProject/docs/alpha.docx)
+* [Iteration 3 beta](https://github.com/DavidMilstein/TamaringaProject/docs/beta.pdf)
+* [Iteration 4 final](https://github.com/DavidMilstein/TamaringaProject/docs/final.docx)
 
 
 ## Development server
