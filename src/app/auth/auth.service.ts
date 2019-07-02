@@ -12,7 +12,7 @@ export class AuthService {
     private isAuthenticated = false;
     private isAdminAuthenticated = false;
     private isResearcherAuthenticated = false;
-    private test = '5ccfd97a8991c605c8e32f7d';
+    private test = '5d13dbffbd51064e3c035e91';
     private records: string[] = [];
     private token: string;
     private tokenTimer: any;
@@ -20,7 +20,8 @@ export class AuthService {
     private researcherFlag = false;
     private playlistSource = new BehaviorSubject(null);
     currentPlaylist = this.playlistSource.asObservable();
-    public items;
+    public plOnceVote;
+    public plFirstLogin;
 
     // that will actually be a new subject imported from rxjs and i'll use that subject
     // to push the authentication information to the components which are interested.
@@ -139,10 +140,11 @@ export class AuthService {
 
                     console.log('response.entrance', response.entrance);
                     // if (response.entrance === 0) {
-                    this.updatePlaylist(response.playlist);
-                    this.items = response.items;
-                    console.log(this.items);
-
+                    // this.updatePlaylist(response.playlist);
+                    this.plOnceVote = response.items;
+                    console.log(this.plOnceVote);
+                    this.plFirstLogin = response.playlist;
+                    console.log(this.plFirstLogin);
                     // } else {
                     // localStorage.setItem('notEar', JSON.stringify(response.items[0].notEar));
                     // }
@@ -211,6 +213,8 @@ export class AuthService {
             this.setAuthTimer(expireIn / 1000); // divide by 1000 because getTime() returns th time in ms
             this.authStatusListener.next(true);
             this.adminAuthStatusListener.next(true);
+
+            // TODO
         }
     }
 
@@ -257,6 +261,7 @@ export class AuthService {
         localStorage.removeItem('id');
         localStorage.removeItem('researcher');
         localStorage.removeItem('entrance');
+        localStorage.removeItem('isVoted');
     }
 
     // get my data from the local storage

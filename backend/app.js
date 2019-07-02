@@ -51,7 +51,7 @@ app.post("/api/user/signup", async (req, res) => {
     const records = await Record.find({
         year: {$gt: req.body.year - 3, $lt: req.body.year + 3},
         country: req.body.country
-    }).sort({'youtube.views': -1}).limit(30);
+    }).sort({'youtube.views': -1}).limit(25);
 
     // create a user schema
     const user = new User({
@@ -118,13 +118,11 @@ app.post("/api/user/signup", async (req, res) => {
         playlist: playlistFound,
     });
 });
-// ======================test login==========================
 
 app.post("/api/user/login", async (req, res) => {
 
     const user = await User.findOne({id: req.body.id});
     // console.log("user:\n", user, "\n\n");
-    // console.log("FullName:\n", user.fullName, "\n\n");
 
     if (!user) {
         return res.status(401).json({
@@ -160,7 +158,7 @@ app.post("/api/user/login", async (req, res) => {
      // ===================================================================================
      // ===================================================================================
      // ===================================================================================
-    console.log("user.entrances\n", user.entrances, "\n\n");
+    console.log("user.entrances\n", user.entrances, "\n");
 
     // Return and update the user best song, the recommended user best songs and the unseen user song
     // enter only if the user is already voted for any song.
@@ -169,7 +167,7 @@ app.post("/api/user/login", async (req, res) => {
         console.log("1");
         const id = req.body.id;
         Playlist.find({name: user.group}).exec(async function (err, docs) {
-            console.log("records.votes.userId\n", docs, "\n\n");
+            //console.log("records.votes.userId\n", docs, "\n\n");
             if (err) {
                 console.log("records.votes.userId\n", err, "\n\n");
                 return res.status(401).json({
@@ -193,7 +191,7 @@ app.post("/api/user/login", async (req, res) => {
                     topUser.push({
                         index: index,
                         vote: o[0].vote,
-                        mbid: rec[index].mbid,
+                        mbId: rec[index].mbid,
                         artist: rec[index].artist[0].name,
                         title: rec[index].title,
                         videoId: rec[index].youtube.videoId
@@ -202,7 +200,7 @@ app.post("/api/user/login", async (req, res) => {
                     notEar.push({
                         index: index,
                         vote: 0,
-                        mbid: rec[index].mbid,
+                        mbId: rec[index].mbid,
                         artist: rec[index].artist[0].name,
                         title: rec[index].title,
                         videoId: rec[index].youtube.videoId
@@ -254,7 +252,7 @@ app.post("/api/user/login", async (req, res) => {
                         recSongs.push({
                             index: index,
                             vote: o[0].vote,
-                            mbid: rec[index].mbid,
+                            mbId: rec[index].mbid,
                             artist: rec[index].artist[0].name,
                             title: rec[index].title,
                             videoId: rec[index].youtube.videoId
@@ -268,7 +266,7 @@ app.post("/api/user/login", async (req, res) => {
             }
 
             //console.log(recSongs);
-            var obj = [{topUser, recSongs, notEar}];
+            const obj = [{topUser, recSongs, notEar}];
             console.log("obj\n", obj, "\n\n");
             user.entrances += 1;
             await user.save();
@@ -418,9 +416,9 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
         if (err) return next(err);
         // do cosine similarity calc in 2 minutes
         // loop all songs
-        var data = user.songs[0];
+        const data = user.songs[0];
         // console.log('data mbid:\n', data.mbid, '\n\n');
-        var group = user.group;
+        const group = user.group;
         //console.log('group:\n', group, '\n\n');
         //
         // const playlist = await Playlist.findOne({name: user.group});
@@ -464,15 +462,15 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
             users.forEach(u => {
                 const votesByUser = [];
                 q.records.forEach(rec => {
-                    votesByUser.push(rec.votes.filter(x => x.userId === u).map(x => x.vote)[0] || 0)
+                    votesByUser.push(rec.votes.filter(x => x.userId == u).map(x => x.vote)[0] || 0)
                 });
                 q.similarity = q.similarity || [];
-                const pos = q.similarity.findIndex(x => x.u1 === u && x.u2 === data.id || x.u2 === u && x.u1 === data.id);
+                const pos = q.similarity.findIndex(x => x.user1 == u && x.user2 == data.id || x.user2 == u && x.user1 == data.id);
                 //console.log(pos);
                 if (pos >= 0) {
                     q.similarity[pos].similarity = similarity(userArr, votesByUser);
                 } else {
-                    q.similarity.push({u1: u, u2: data.id, similarity: similarity(userArr, votesByUser)})
+                    q.similarity.push({user1: u, user2: data.id, similarity: similarity(userArr, votesByUser)})
                 }
             });
             console.log('q.similarity:\n', q.similarity, '\n\n');
