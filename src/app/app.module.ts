@@ -7,6 +7,7 @@ import { Validators} from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTableModule} from '@angular/material/table';
 
 // import of Angular Material Components that used for project
 import {
@@ -22,6 +23,8 @@ import {
   MatNativeDateModule,
   MatExpansionModule,
   MatDatepickerModule,
+  MatPaginatorModule,
+  MatSortModule,
 } from '@angular/material';
 
 // Routing
@@ -47,6 +50,9 @@ import { MusicListComponent } from './user/music-list/music-list.component';
 import {MatIconModule} from '@angular/material/icon';
 import { NewAdminComponent } from './admin/new-admin/new-admin.component';
 import { NewResearcherComponent } from './admin/new-researcher/new-researcher.component';
+import { ResearchEditComponent } from './researcher/research-edit/research-edit.component';
+import { PasswordsManageComponent } from './admin/passwords-manage/passwords-manage.component';
+import { PaComponent } from './pa/pa.component';
 
 
 
@@ -65,7 +71,10 @@ import { NewResearcherComponent } from './admin/new-researcher/new-researcher.co
     ResearchListComponent,
     MusicListComponent,
     NewAdminComponent,
-    NewResearcherComponent
+    NewResearcherComponent,
+    ResearchEditComponent,
+    PasswordsManageComponent,
+    PaComponent
   ],
   imports: [
     BrowserModule,
@@ -91,8 +100,10 @@ import { NewResearcherComponent } from './admin/new-researcher/new-researcher.co
     CommonModule,
     MatButtonToggleModule,
     MatIconModule,
-    MatSnackBarModule
-
+    MatSnackBarModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
 ],
   providers: [
     // we dont overwrite existing interceptors, adds it as an additional one. allow multiple interceptors in an app

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import { ResearchData } from '../research-data.model';
 import { ResearchService } from '../research.service';
 import { Subscription } from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-research-list',
@@ -14,7 +15,7 @@ export class ResearchListComponent implements OnInit , OnDestroy {
   private researchesSub: Subscription;
   // public: create a property researchesService, and store the incoming
   // researchesService into it
-  constructor(public researchesService: ResearchService) {
+  constructor(public researchesService: ResearchService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -36,5 +37,9 @@ export class ResearchListComponent implements OnInit , OnDestroy {
   }
   ngOnDestroy(): void {
     this.researchesSub.unsubscribe();
+  }
+
+  onEdit(researchId: string) {
+    this.researchesService.editResearch(researchId);
   }
 }

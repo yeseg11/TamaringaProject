@@ -12,7 +12,7 @@ export class AuthService {
     private isAuthenticated = false;
     private isAdminAuthenticated = false;
     private isResearcherAuthenticated = false;
-    private test = '5d13dbffbd51064e3c035e91';
+    private test = '5d13dbffbd51064e3c035e91‏';
     private records: string[] = [];
     private token: string;
     private tokenTimer: any;

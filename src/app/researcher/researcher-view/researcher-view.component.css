@@ -18,3 +18,16 @@ p {
   font-size: 60px;
   font-weight: bold;
 }
+
+/*#mat-tab-body-content {*/
+  /*background-image: url(../../../assets/img/background6.jpeg);*/
+  /*height: 100%;*/
+
+/*}*/
+
+main {
+  /*width: 80%;*/
+  /*margin: 1rem auto;*/
+  background-image: url(../../../assets/img/background6.jpeg);
+  /*height: 100%;*/
+}

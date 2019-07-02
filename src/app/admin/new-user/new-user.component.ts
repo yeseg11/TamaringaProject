@@ -15,7 +15,7 @@ export class NewUserComponent implements OnInit, OnDestroy {
   public country: any;
 
 
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private snackBar: MatSnackBar) {}
 
 
   // "form" is the param that we got from the form by the user
@@ -36,6 +36,9 @@ export class NewUserComponent implements OnInit, OnDestroy {
     // console.log('server: createUser()');
     // this.isLoading = false;
     form.resetForm();
+    this.snackBar.open('משתמש נוצר', 'סגור', {
+      duration: 2000,
+    });
     // this.snackBar.open('user created', 'close');
   }
 
@@ -49,9 +52,5 @@ export class NewUserComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.authStatusSub.unsubscribe();
-  }
-
-  openSnackBar() {
-
   }
 }

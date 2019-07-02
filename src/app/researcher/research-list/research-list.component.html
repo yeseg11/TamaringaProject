@@ -1,4 +1,4 @@
-<mat-accordion multi="true" *ngIf="researches.length > 0" xmlns:componentDef="http://www.w3.org/1999/xhtml">
+<main><mat-accordion multi="true" *ngIf="researches.length > 0" xmlns:componentDef="http://www.w3.org/1999/xhtml">
   <mat-expansion-panel *ngFor="let research of researches">
     <mat-expansion-panel-header>
       {{ research.name }}
@@ -14,9 +14,12 @@
     <p class="title">תאריך סוף המחקר</p>
     <p class="content"> {{ research.endDate }}</p>
     <mat-action-row>
-      <button mat-button color="primary" (click)="onEdit(research.id)">ערוך</button>
+      <!--<a mat-button color="primary" [routerLink]="['/edit/',research.id]">ערוך</a>-->
+      <!--<button mat-button color="primary">ערוך</button>-->
+      <!--<button mat-button color="warn" (click)="onEdit(research.id)">ערוך</button>-->
       <button mat-button color="warn" (click)="onDelete(research.id)">מחק</button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
 <p class="info-text "*ngIf="researches.length <=0">לא קיימים מחקרים עדיין!</p>
+</main>

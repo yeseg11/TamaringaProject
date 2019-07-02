@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-researcher',
@@ -13,7 +14,7 @@ export class NewResearcherComponent implements OnInit, OnDestroy {
   private authStatusSub: Subscription;
   // public country: any;
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService, private snackBar: MatSnackBar) { }
 
   // "form" is the param that we got from the form by the user
   onAddResearcher(form: NgForm) {
@@ -31,6 +32,9 @@ export class NewResearcherComponent implements OnInit, OnDestroy {
     console.log('server: createResearcher()');
     // this.isLoading = false;
     form.resetForm();
+    this.snackBar.open('חוקר נוצר', 'סגור', {
+      duration: 2000,
+    });
   }
 
   ngOnInit(): void {

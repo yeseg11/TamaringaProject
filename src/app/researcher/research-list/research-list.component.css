@@ -1,6 +1,6 @@
 :host{
   display: block;
-  margin-top: 1rem;
+  /*margin-top: 1rem;*/
 }
 
 mat-expansion-panel-header {
@@ -22,8 +22,12 @@ mat-expansion-panel-header {
 }
 
 mat-expansion-panel {
-
   width: 30%;
   margin: auto;
 
+}
+
+main{
+  background-image: url(../../../assets/img/background6.jpeg);
+  height: 100%;
 }

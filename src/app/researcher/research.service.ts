@@ -16,7 +16,14 @@ export class ResearchService {
   private researchesUpdated = new Subject<ResearchData[]>();
   private usersUpdated = new Subject<AuthData[]>();
   private userNames: string[] = [];
+  private userIds: string[] = [];
+  private userPasswords: string[] = [];
   private flag = true;
+  private passwordFlag = true;
+  private idFlag = true;
+  public userRes;
+  public usersAuth;
+
   constructor(private http: HttpClient, private router: Router) {
   }
 
@@ -73,8 +80,7 @@ export class ResearchService {
     const researchData: ResearchData = {id, name, participants,  process, variables, startDate, endDate};
     this.http.post<{ message: string, researchId: string}>(BACKEND_URL + '/researcher/new-research', researchData)
       .subscribe(response => {
-        const researchId = response.researchId;
-        researchData.id = researchId;
+        researchData.id = response.researchId;
         // add the new research to the researches array
         this.researches.push(researchData);
         // update the array
@@ -108,20 +114,20 @@ export class ResearchService {
       .get<{message: string, users: any }>(
         BACKEND_URL + '/user/users')
       .subscribe(response => {
-        const userRes = response.users;
-        for ( const user of userRes ) {
-          for ( const userExist of this.userNames ) {
-            if ( user.fullName === userExist ) {
+        this.userRes = response.users;
+        for ( const user of this.userRes ) {
+          for (const userExist of this.userNames) {
+            if (user.fullName === userExist || user.country === 'researcher' || user.fullName === 'admin') {
               this.flag = false;
             } else {
               this.flag = true;
             }
           }
-          if ( this.flag === true ) {
+          if (this.flag === true) {
             this.userNames.push(user.fullName);
           }
+          this.flag = true;
         }
-        this.flag = true;
       });
     console.log('users names: ', this.userNames);
     return this.userNames;
@@ -133,5 +139,31 @@ export class ResearchService {
 
   getUser(id: number) {
     return {...this.users.find(r => r.id === id)};
+  }
+
+  getPasswords() {
+    this.http
+      .get<{message: string, users: any }>(
+        BACKEND_URL + '/user/users')
+      .subscribe(response => {
+        // const userAuth = response.users;
+        console.log('response: ', response);
+        this.usersAuth = response.users;
+        console.log('users: ', this.usersAuth);
+      });
+    // console.log('user auth', this.usersAuth);
+    // return this.usersAuth;
+  }
+
+  editResearch(researchId: string) {
+    this.router.navigate(['/edit', researchId]);
+    localStorage.setItem('researchId', researchId);
+  }
+
+  updateResearch(name: string, participants: string[], id: string, process: string, variables: string, startDate: string, endDate: string) {
+    console.log('update from service');
+    const researchData: ResearchData = {name, participants, id, process, variables, startDate, endDate};
+    this.http.put(BACKEND_URL + '/researcher/new-research/' + id, researchData)
+      .subscribe(response => console.log(response));
   }
 }
