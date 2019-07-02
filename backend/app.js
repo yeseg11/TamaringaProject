@@ -1,12 +1,12 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const bcrypt = require("bcryptjs"); //move later to routes/users
+const bcrypt = require("bcryptjs"); // TODO : move later to routes/users
 const User = require("./models/users");
 const Playlist = require("./models/playlist");
 const Record = require("./models/records");
 const jwt = require('jsonwebtoken');
-const checkAuth = require("./middleware/check-auth"); //just pass the refernce to that funtion (and not execute) and Express will execute for us
+const checkAuth = require("./middleware/check-auth"); //just pass the reference to that function (and not execute) and Express will execute for us
 const Research = require("./models/research");
 const similarity = require('compute-cosine-similarity');
 
@@ -15,9 +15,11 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-//console.log(process.env);
-//console.log(process.env.MONGO_ATLAS_PW);
-
+/**
+ * Connect server's app with MongoDB AWS server
+ *
+ * @PARAM { String } process.env.MONGO_ATLAS_PW : password for connecting
+ */
 mongoose.connect("mongodb+srv://david:" + process.env.MONGO_ATLAS_PW + "@cluster0-bo1pz.mongodb.net/Tamaringa", {useNewUrlParser: true})
     .then(() => {
         console.log("Connected to database!");
@@ -27,6 +29,9 @@ mongoose.connect("mongodb+srv://david:" + process.env.MONGO_ATLAS_PW + "@cluster
     });
 mongoose.set('useCreateIndex', true);
 
+/**
+ * setting HTTP headers to serve with the file
+ */
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader(
@@ -40,7 +45,19 @@ app.use((req, res, next) => {
     next();
 });
 
-//save user to the DB
+/**
+ * create user in DB and create/update playlist in DB for the user
+ *
+ * @REQUEST:
+ * @PARAM {Number} id: user's id
+ * @PARAM {String} fullName: user's full name
+ * @PARAM {String} country: user's country
+ * @PARAM {Number} age: user's age
+ * @PARAM {String} password: user's password
+ *
+ * @RESPONSE {playlist , saveUSer} as JSON
+
+ */
 app.post("/api/user/signup", async (req, res) => {
     //once the hash func is done, we get the hash param and then inside the then block we create a new user
     // bcrypt.hash(req.body.password, 10)
@@ -67,13 +84,7 @@ app.post("/api/user/signup", async (req, res) => {
         isVoted: false
     });
     let saveUSer = await user.save(); //we have to handle this promise
-    // let saveUSer = user.save()
-    //     .catch(err => {
-    //         res.status(500).json({
-    //             message: "Invalid authentication credentials!" + err
-    //         });
-    //     });
-    // console.log(saveUSer);
+
     if (!saveUSer) {
         return res.status(500).json({
             message: "Invalid authentication credentials!"
@@ -87,17 +98,14 @@ app.post("/api/user/signup", async (req, res) => {
         records: records
     };
 
-    // console.log('playlist:\n', playlist, '\n\n');
-
     const query = {name: playlist.name};
     const update = playlist;
-    const options = {upsert: true, new: true, setDefaultsOnInsert: true,  useFindAndModify: false};
+    const options = {upsert: true, new: true, setDefaultsOnInsert: true, useFindAndModify: false};
 
     let playlistIsExist = true;
 
     let playlistFound = await Playlist.findOne({name: playlist.name});
     // playlist ins't found, then create new one.
-     // console.log('playlistFound1:\n', playlistFound,'\n\n');
 
     if (!playlistFound) {
         playlistIsExist = false;
@@ -111,7 +119,6 @@ app.post("/api/user/signup", async (req, res) => {
             });
         }
     }
-    // console.log('playlistFound2:\n', playlistFound, '\n\n');
 
     res.status(201).json({
         user: saveUSer,
@@ -119,6 +126,15 @@ app.post("/api/user/signup", async (req, res) => {
     });
 });
 
+/**
+ * validate user's login and return the playlist according to the user's data (first login, is voted? ect.)
+ *
+ * @REQUEST:
+ * @PARAM {Number} id: user's id
+ * @PARAM {String} password: user's password
+ *
+ * @RESPONSE {token , expiresIn, users data, playlist} as JSON
+ */
 app.post("/api/user/login", async (req, res) => {
 
     const user = await User.findOne({id: req.body.id});
@@ -153,17 +169,11 @@ app.post("/api/user/login", async (req, res) => {
         {expiresIn: "1h"}
     );
 
-
-
-     // ===================================================================================
-     // ===================================================================================
-     // ===================================================================================
     console.log("user.entrances\n", user.entrances, "\n");
 
     // Return and update the user best song, the recommended user best songs and the unseen user song
     // enter only if the user is already voted for any song.
-    if (!firstEntranceFlag && isUserVoted)
-    {
+    if (!firstEntranceFlag && isUserVoted) {
         console.log("1");
         const id = req.body.id;
         Playlist.find({name: user.group}).exec(async function (err, docs) {
@@ -184,10 +194,6 @@ app.post("/api/user/login", async (req, res) => {
                 //console.log(rec);
                 //console.log("rec\n",rec,"\n\n");
                 if (ex != -1) {
-                    //console.log(rec[index]);
-                    //console.log(index);
-                    //console.log(currentValue.votes.filter(x=>x.userId == id));
-                    //console.log(currentValue.votes.findIndex(x=>x.userId == id));
                     topUser.push({
                         index: index,
                         vote: o[0].vote,
@@ -230,8 +236,8 @@ app.post("/api/user/login", async (req, res) => {
                 //console.log(topUser);
                 //console.log(topUsers);
                 //topUsers = topUsers[0];
-                console.log('topUsers:\n',topUsers, '\n\n');
-                console.log('topUsers[0]:\n',topUsers[0], '\n\n');
+                console.log('topUsers:\n', topUsers, '\n\n');
+                console.log('topUsers[0]:\n', topUsers[0], '\n\n');
                 let recUser;
                 if (id == topUsers[0].user1) {
                     console.log("14");
@@ -287,10 +293,6 @@ app.post("/api/user/login", async (req, res) => {
         });
     }
 
-    // ===================================================================================
-    // ===================================================================================
-    // ===================================================================================
-
     // first user's login or admin/researcher login
     if (firstEntranceFlag || !isUserVoted) {
         console.log("2");
@@ -305,7 +307,7 @@ app.post("/api/user/login", async (req, res) => {
             playlist: playlist,
             country: user.country,
             age: user.age,
-            entrance : user.entrances,
+            entrance: user.entrances,
             isVoted: user.isVoted
         });
     }
@@ -315,8 +317,8 @@ app.get("/api/user/users", async (req, res) => {
 
     const users = await User.find();
     res.status(200).json({
-      message: "users fetched successfully",
-      users: users,
+        message: "users fetched successfully",
+        users: users,
     });
 });
 
@@ -403,9 +405,9 @@ app.get("/api/researcher/new-research", async (req, res) => {
  */
 app.delete("/api/researcher/new-research/:id", async (req, res, next) => {
     const result = await Research.deleteOne({_id: req.params.id});
-        // console.log(result);
-        res.status(200).json({message: "Research deleted"});
-    });
+    // console.log(result);
+    res.status(200).json({message: "Research deleted"});
+});
 
 // update a research
 // app.put("/api/researcher/new-research/:researchId", async  (req, res, next) => {
@@ -422,6 +424,18 @@ app.delete("/api/researcher/new-research/:id", async (req, res, next) => {
 //   res.status(200).json({message: "Update successful!"});
 // });
 
+/**
+ * update the user's vote in DB and use Cosine Similarity to calculate
+ * the adjustment between all users that vote the specify song
+ *
+ * @REQUEST:
+ * @PARAM {Number} id: user's id
+ * @PARAM {String} mbid: songs's mbid
+ * @PARAM {Number} vote: user's vote
+ *
+ * @RESPONSE {message} as JSON
+ */
+
 app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
     const usersId = req.params.id;
     const user = await User.findOne({id: usersId});
@@ -431,16 +445,10 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
         });
     }
 
-    // console.log(req.params.ytid);
     const record = await Record.findOne({"youtube.videoId": req.params.ytid});
     const mbId = record.mbId;
     const usersVote = req.params.n;
 
-    // console.log('user:\n', user, '\n\n================================\n');
-
-    // user.songs.id = usersId;
-    // user.songs.mbid = mbId;
-    // user.songs.vote = usersVote;
     const obj = {
         songs: JSON.stringify({
             id: usersId,
@@ -450,24 +458,15 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
     };
     user.songs = JSON.parse(obj.songs);
 
-    // console.log('user:\n', user, '\n\n================================\n');
-
     var bulk = User.collection.initializeOrderedBulkOp();
     bulk.find({
         id: user.id                 //update the id , if have - update. else - build new document
     }).upsert().updateOne(user);
     bulk.execute(function (err, BulkWriteResult) {
         if (err) return next(err);
-        // do cosine similarity calc in 2 minutes
-        // loop all songs
         const data = user.songs[0];
-        // console.log('data mbid:\n', data.mbid, '\n\n');
         const group = user.group;
-        //console.log('group:\n', group, '\n\n');
-        //
-        // const playlist = await Playlist.findOne({name: user.group});
-        //
-        // var lookup = {'name': group, 'records.mbid': data.mbid};
+
         // "q" holds the return obj - playlist document found
         Playlist.findOne({name: user.group, 'records.mbId': user.songs[0].mbid}).exec(async function (err, q) {
             // if (err) return next(err);
@@ -491,7 +490,6 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
             const userArr = []; // array of all votes per records. for example: [0,0,2,0,5,1,5,0...]
             const users = []; //array of users that share your playlist
             q.records.forEach(rec => {
-                // למה המערך לא מופיע בסדר הנכון? אחרי שמצביעים
                 userArr.push(rec.votes.filter(x => x.userId === data.id).map(x => x.vote)[0] || 0);
                 rec.votes.map(function (x) {
                     if (users.indexOf(x.userId) === -1 && x.userId !== data.id) {
@@ -501,7 +499,6 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
             });
             console.log('userArr:\n', userArr, '\n\n');
             console.log('users:\n', users, '\n\n');
-
 
             users.forEach(u => {
                 const votesByUser = [];
@@ -524,16 +521,12 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
             q.save(function (err) { // Mongoose will save changes to `similarity`.
                 if (err) return next(err);
                 res.json({
-                    message: 'cool man',
+                    message: 'successfully vote',
                 });
 
             })
         });
     });
-
-    // res.status(200).json({
-    //     user: user,
-    // });
 });
 
 module.exports = app;
