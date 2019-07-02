@@ -94,6 +94,6 @@ export class MusicListComponent implements OnInit {
         console.log('rate: ', rate, ' id: ', userId, ' youtube id: ', ytId);
         console.log(this.authService.items);
         this.authService.addVote(rate, userId, ytId);
-        alert('vote add');
+        // alert('vote add');
     }
 }

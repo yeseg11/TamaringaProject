@@ -1,6 +1,8 @@
 <!--<div class="example-container">-->
-<mat-card>
 
+<!--// TODO-->
+
+<mat-card>
   <form  (submit)="onAddResearch(addResearchForm)" #addResearchForm="ngForm">
     <div class="example-container">
       <p>יצירת מחקר חדש</p>
@@ -16,7 +18,6 @@
         <mat-error *ngIf="name.invalid">הכנס שם</mat-error>
       </mat-form-field>
 
-
       <!--<mat-form-field>-->
         <!--<mat-label>Toppings</mat-label>-->
         <!--<mat-select name="participants" [formControl]="toppings" multiple>-->
@@ -30,7 +31,7 @@
           </mat-select>
         </mat-form-field>
 
-
+      <!--[(ngModel)]="participants"-->
       <mat-form-field>
         <textarea
           matInput

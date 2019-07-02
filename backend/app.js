@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     );
     res.setHeader(
         "Access-Control-Allow-Methods",
-        "GET, POST, PATCH, DELETE, OPTIONS"
+        "GET, POST, PATCH, DELETE, OPTIONS, PUT"
     );
     next();
 });
@@ -333,6 +333,35 @@ app.get("/api/user/users", async (req, res) => {
  */
 
 
+// app.post("/api/researcher/form1", async (req, res) => {
+//   // console.log("id1: ", req.body.id);
+//   const form1 = await new Form1({
+//     introvert: req.body.introvert,
+//     curious: req.body.curious,
+//     enthusiastic: req.body.enthusiastic,
+//     talker: req.body.talker,
+//     tired: req.body.tired,
+//     apathetic: req.body.apathetic,
+//     cooperation: req.body.cooperation,
+//     activities: req.body.activities,
+//     food: req.body.food,
+//     sleep: req.body.sleepC,
+//     physic: req.body.physic,
+//     mental: req.body.mental,
+//     family: req.body.family,
+//     friendly: req.body.friendly,
+//     name: req.body.name,
+//     age: req.body.age,
+//     classText: req.body.classText,
+//     id: req.body.id,
+//   });
+//   console.log(form1);
+//   form1.save();
+//   res.status(201).json({
+//     message: 'form1 created!',
+//     form1Id: result._id //we send the result data so we can see what's inside there
+//   });
+// });
 
 app.post("/api/researcher/new-research", async (req, res) => {
     // console.log("id1: ", req.body.id);
@@ -379,6 +408,21 @@ app.delete("/api/researcher/new-research/:id", async (req, res, next) => {
         // console.log(result);
         res.status(200).json({message: "Research deleted"});
     });
+
+// update a research
+// app.put("/api/researcher/new-research/:researchId", async  (req, res, next) => {
+//   const research = await new Research({
+//     name: req.body.name,
+//     participants: req.body.participants,
+//     _id: req.body.id,
+//     process: req.body.process,
+//     variables: req.body.variables,
+//     startDate: req.body.startDate,
+//     endDate: req.body.endDate,
+//   });
+//   Research.updateOne({_id: req.params.id}, research );
+//   res.status(200).json({message: "Update successful!"});
+// });
 
 app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
     const usersId = req.params.id;

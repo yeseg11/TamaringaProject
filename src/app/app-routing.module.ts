@@ -9,6 +9,7 @@ import {ResearcherViewComponent} from './researcher/researcher-view/researcher-v
 import {NewResearchComponent} from './researcher/new-research/new-research.component';
 import {AddMusicComponent} from './music/add-music/add-music.component';
 import {NewAdminComponent} from './admin/new-admin/new-admin.component';
+import {ResearchEditComponent} from './researcher/research-edit/research-edit.component';
 
 // create routing
 // we use canActivate that we have implemented in auth.guard service for routes we want to protect
@@ -21,7 +22,7 @@ const appRoutes: Routes = [
   { path: 'researcher', component: ResearcherViewComponent },
   { path: 'researcher/new-research', component: NewResearchComponent },
   { path: 'add-music', component: AddMusicComponent },
-  { path: 'edit/:researchId', component: ResearcherViewComponent },
+  { path: 'edit/:researchId', component: ResearchEditComponent }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(appRoutes)],

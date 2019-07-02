@@ -6,6 +6,7 @@ import {ActivatedRoute, ParamMap} from '@angular/router';
 import {AuthData} from '../../auth/auth-data.model';
 import {Subscription} from 'rxjs';
 import {AuthService} from '../../auth/auth.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-research',
@@ -16,7 +17,7 @@ export class NewResearchComponent implements OnInit {
   // usersList = new FormControl();
   research: ResearchData;
   private mode = 'create';
-  private researchId: string;
+  private id: string;
   private usersSub: Subscription;
   public participants: any;
   public variables: any;
@@ -27,26 +28,32 @@ export class NewResearchComponent implements OnInit {
   users: AuthData[] = [];
 
 
-  constructor(public researchesService: ResearchService, public authService: AuthService, public route: ActivatedRoute) {
+  constructor(public researchesService: ResearchService, public authService: AuthService,
+              public route: ActivatedRoute, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe((paramMap: ParamMap) => {
-      if (paramMap.has('researchId)')) {
-        this.mode = 'edit';
-        this.researchId = paramMap.get('researchId');
-        this.research = this.researchesService.getResearch(this.researchId);
-      } else {
-        this.mode = 'create';
-        this.researchId = null;
-      }
-    });
-
     this.userNames = this.researchesService.getUsers();
     this.usersSub = this.researchesService.getUsersUpdateListener()
       .subscribe((users: AuthData[]) => {
         this.users = users;
       });
+
+    // this.route.paramMap.subscribe((paramMap: ParamMap) => {
+    //   console.log('ngOnInit()');
+    //   console.log('param: ', paramMap.getAll('id'));
+    //   if (paramMap.has('id')) {
+    //     console.log('if edit');
+    //     this.mode = 'edit';
+    //     this.id = paramMap.get('id');
+    //     this.research = this.researchesService.getResearch(this.id);
+    //     console.log('research: ', this.research);
+    //   } else {
+    //     console.log('else - not edit');
+    //     this.mode = 'create';
+    //     this.id = null;
+    //   }
+    // });
   }
   /** -------------------------------------------------------------------------
    * Add research with the user inout
@@ -70,6 +77,9 @@ export class NewResearchComponent implements OnInit {
                                           this.eDate);
     console.log('server: createResearch()');
     form.resetForm();
+    this.snackBar.open('מחקר נוצר', 'סגור', {
+      duration: 2000,
+    });
   }
 
 

@@ -1,6 +1,6 @@
 :host {
   display: block;
-  margin-top: 1rem;
+  /*margin-top: 1rem;*/
 }
 .example-container {
   display: flex;
