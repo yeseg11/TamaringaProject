@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AuthData, AuthDataLogin} from './auth-data.model';
-import {Subject, BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {Router} from '@angular/router';
 import {environment} from '../../environments/environment';
 
@@ -12,8 +12,6 @@ export class AuthService {
     private isAuthenticated = false;
     private isAdminAuthenticated = false;
     private isResearcherAuthenticated = false;
-    private test = '5d13dbffbd51064e3c035e91‏';
-    private records: string[] = [];
     private token: string;
     private tokenTimer: any;
     private adminFlag = false;
@@ -85,12 +83,11 @@ export class AuthService {
      * @PARAM {String} password: user's password
      *
      */
-    createUser(fullName: string, id: number, age: number, year: number, password: string, country: string) {
-        const authData: AuthData = {fullName, id, age, year, password, country};
+    createUser(fullName: string, id: number, age: number, year: number, password: string, country: string, role: string) {
+        const authData: AuthData = {fullName, id, age, year, password, country, role};
         this.http.post(BACKEND_URL + '/user/signup', authData)
             .subscribe(response => {
-                console.log('response from server: ');
-                console.log(response);
+                console.log('response from server: ', response);
                 this.loadingListener.next(true);
             }, error => {
                 console.log(error);
@@ -98,7 +95,6 @@ export class AuthService {
                 this.loadingListener.next(false);
             });
     }
-
 
     /**
      * login into the system, knows to recognize what kind of user
@@ -129,7 +125,6 @@ export class AuthService {
                     // extract from the response the expire duration
                     const expiresInDuration = response.expiresIn;
                     this.setAuthTimer(expiresInDuration);
-                    // console.log(response);
                     console.log('expires in duration: ', expiresInDuration);
 
                     localStorage.setItem('id', response.userId);
@@ -140,9 +135,8 @@ export class AuthService {
                     this.authStatusListener.next(true);
                     this.loadingListener.next(true);
 
-                  //  if the user is an admin
+                    //  if the user is an admin
                     if (response.role === 'admin') {
-                        console.log('admin');
                         this.adminFlag = true;
                         localStorage.setItem('admin', String(this.adminFlag));
                         this.isAdminAuthenticated = true;
@@ -154,27 +148,18 @@ export class AuthService {
                         this.isResearcherAuthenticated = true;
                         this.researcherAuthStatusListener.next(true);
                         this.researcherFlag = true;
-                        console.log('researcher logged in');
                     }
                     localStorage.setItem('entrance', String(response.entrance));
                     localStorage.setItem('userName', response.userName);
                     localStorage.setItem('isVoted', String(response.isVoted));
 
                     console.log('response.entrance', response.entrance);
-                    // if (response.entrance === 0) {
-                    // this.updatePlaylist(response.playlist);
                     this.plOnceVote = response.items;
-                    console.log(this.plOnceVote);
                     this.plFirstLogin = response.playlist;
-                    console.log(this.plFirstLogin);
-                    // } else {
-                    // localStorage.setItem('notEar', JSON.stringify(response.items[0].notEar));
-                    // }
 
                     const now = new Date();
                     const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
                     this.saveAuthData(token, expirationDate);
-                    console.log('expiration date: ', expirationDate);
 
                     if (this.adminFlag) {
                         this.router.navigate(['/admin']);
@@ -217,7 +202,6 @@ export class AuthService {
             .subscribe(response => {
                 console.log(response);
             });
-
     }
 
     // called every action/changes in the DOM of the app, checking for the user's authentication
@@ -238,8 +222,6 @@ export class AuthService {
             if (admin) {
                 this.isAdminAuthenticated = true;
             }
-
-            console.log(this.adminFlag);
 
             this.setAuthTimer(expireIn / 1000); // divide by 1000 because getTime() returns th time in ms
             this.authStatusListener.next(true);
@@ -268,7 +250,6 @@ export class AuthService {
     }
 
     private setAuthTimer(duration: number) {
-        console.log('setting time ' + duration);
         // Auto logout after 1h
         this.tokenTimer = setTimeout(() => {
             this.logout();

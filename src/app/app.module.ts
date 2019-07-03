@@ -50,11 +50,8 @@ import { MusicListComponent } from './user/music-list/music-list.component';
 import {MatIconModule} from '@angular/material/icon';
 import { NewAdminComponent } from './admin/new-admin/new-admin.component';
 import { NewResearcherComponent } from './admin/new-researcher/new-researcher.component';
-import { ResearchEditComponent } from './researcher/research-edit/research-edit.component';
+// import { ResearchEditComponent } from './researcher/research-edit/research-edit.component';
 import { PasswordsManageComponent } from './admin/passwords-manage/passwords-manage.component';
-import { PaComponent } from './pa/pa.component';
-
-
 
 @NgModule({
   declarations: [
@@ -72,9 +69,8 @@ import { PaComponent } from './pa/pa.component';
     MusicListComponent,
     NewAdminComponent,
     NewResearcherComponent,
-    ResearchEditComponent,
+    // ResearchEditComponent,
     PasswordsManageComponent,
-    PaComponent
   ],
   imports: [
     BrowserModule,
