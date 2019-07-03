@@ -25,17 +25,17 @@ export class AuthService {
 
     // that will actually be a new subject imported from rxjs and i'll use that subject
     // to push the authentication information to the components which are interested.
-    // wrap a boolean because i don't really need the token in my other components - only in my interceptor
+    // wrap a boolean because we don't really need the token in my other components - only in my interceptor
     private authStatusListener = new Subject<boolean>();
     private adminAuthStatusListener = new Subject<boolean>();
     private researcherAuthStatusListener = new Subject<boolean>();
     private loadingListener = new Subject<boolean>();
 
-    // private loadingListener = new Subject<boolean>();
 
     constructor(private http: HttpClient, private router: Router) {
     }
 
+    // get user's token
     getToken() {
         return this.token;
     }
@@ -45,38 +45,48 @@ export class AuthService {
         return this.isAuthenticated;
     }
 
+    // get if admin for admin-auth listener
     getIsAdmin() {
         return this.isAdminAuthenticated;
     }
 
+    // get if researcher for researcher-auth listener
     getIsResearcher() {
         return this.isResearcherAuthenticated;
     }
 
-    getRecords() {
-        return this.records;
-    }
-
+    // return as observable so that we can't emit new values from other components just listen from other parts of the apps
     getAuthStatusListener() {
-        // return as observable so that we can't emit new values from other components just listen from other parts of the apps
         return this.authStatusListener.asObservable();
     }
 
+    // used for admin's tab in app's header
     getAdminAuthStatusListener() {
         return this.adminAuthStatusListener.asObservable();
     }
 
+    // used for researcher's tab in app's header
     getResearcherAuthStatusListener() {
         return this.researcherAuthStatusListener.asObservable();
     }
 
+    // used for loading spinner
     getLoadingStatusListener() {
         return this.loadingListener.asObservable();
     }
 
-
-    createUser(fullName: string, id: number, age: number, year: number, password: string, country: string, role: string) {
-        const authData: AuthData = {fullName, id, age, year, password, country, role};
+    /**
+     * create user in DB and create/update playlist in DB for the user
+     *
+     * @PARAM {Number} id: user's id
+     * @PARAM {String} fullName: user's full name
+     * @PARAM {String} country: user's country
+     * @PARAM {Number} age: user's age
+     * @PARAM {String} password: user's password
+     *
+     */
+    createUser(fullName: string, id: number, age: number, year: number, password: string, country: string) {
+        const authData: AuthData = {fullName, id, age, year, password, country};
         this.http.post(BACKEND_URL + '/user/signup', authData)
             .subscribe(response => {
                 console.log('response from server: ');
@@ -89,6 +99,17 @@ export class AuthService {
             });
     }
 
+
+    /**
+     * login into the system, knows to recognize what kind of user
+     * and according the user's kind - display the relevant components
+     * for example - if user: bring user's playlist from server and display it the users route
+     *
+     * @PARAM {number} id: user's id
+     * @PARAM {string} password: user's password
+     *
+     * @RESPONSE {token , expiresIn, users data, playlist} as JSON
+     */
     login(id: number, password: string) {
         const authDataLogin: AuthDataLogin = {id, password};
         // configure this post request to be aware of "token" that the response include - <{token: string}>
@@ -182,6 +203,14 @@ export class AuthService {
         this.playlistSource.next(playlist);
     }
 
+    /**
+     * called when user vote a song, send user vote's details to server
+     *
+     * @PARAM {number} rate: user's vote - between 1 to 5
+     * @PARAM {String} userId: user's ID
+     * @PARAM {String} ytId: YouTube ID of the song
+     *
+     */
     addVote(rate: number, userId: number, ytId: string) {
         // console.log(rate, userId, ytId);
         this.http.get(BACKEND_URL + '/user/' + userId + '/youtube/' + ytId + '/rate/' + rate)
@@ -191,6 +220,7 @@ export class AuthService {
 
     }
 
+    // called every action/changes in the DOM of the app, checking for the user's authentication
     autoUserAuth() {
         const authInformation = this.getAuthData();
         if (!authInformation) {
@@ -219,7 +249,7 @@ export class AuthService {
         }
     }
 
-    // clear the token - ecxecute when we call onLogout()
+    // clear the token - execute when we call onLogout()
     logout() {
         this.token = null;
         this.isAuthenticated = false;
