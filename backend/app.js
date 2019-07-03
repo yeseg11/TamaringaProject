@@ -70,7 +70,7 @@ app.post("/api/user/signup", async (req, res) => {
         country: req.body.country
     }).sort({'youtube.views': -1}).limit(25);
 
-    // create a user schema
+    // create a user schema and prepare for creating in user in DB
     const user = new User({
         fullName: req.body.fullName,
         id: req.body.id,
@@ -81,7 +81,8 @@ app.post("/api/user/signup", async (req, res) => {
         group: req.body.country + req.body.year,
         entrances: 0,
         songs: [],
-        isVoted: false
+        isVoted: false,
+        role: req.body.role
     });
     let saveUSer = await user.save(); //we have to handle this promise
 
@@ -147,7 +148,7 @@ app.post("/api/user/login", async (req, res) => {
     }
     if (user.password !== req.body.password) {
         return res.status(401).json({
-            message: "Invalid authentication credentials!1"
+            message: "Invalid authentication credentials!"
         });
     }
     const isUserVoted = user.isVoted;
@@ -288,7 +289,8 @@ app.post("/api/user/login", async (req, res) => {
                 country: user.country,
                 age: user.age,
                 entrance: user.entrances,
-                isVoted: user.isVoted
+                isVoted: user.isVoted,
+                role: user.role
             });
         });
     }
@@ -308,7 +310,8 @@ app.post("/api/user/login", async (req, res) => {
             country: user.country,
             age: user.age,
             entrance: user.entrances,
-            isVoted: user.isVoted
+            isVoted: user.isVoted,
+            role: user.role
         });
     }
 });

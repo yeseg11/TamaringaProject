@@ -75,8 +75,8 @@ export class AuthService {
     }
 
 
-    createUser(fullName: string, id: number, age: number, year: number, password: string, country: string) {
-        const authData: AuthData = {fullName, id, age, year, password, country};
+    createUser(fullName: string, id: number, age: number, year: number, password: string, country: string, role: string) {
+        const authData: AuthData = {fullName, id, age, year, password, country, role};
         this.http.post(BACKEND_URL + '/user/signup', authData)
             .subscribe(response => {
                 console.log('response from server: ');
@@ -94,7 +94,7 @@ export class AuthService {
         // configure this post request to be aware of "token" that the response include - <{token: string}>
         this.http.post<{
             token: string, expiresIn: number, userDbId: string, userName: string, isVoted: boolean,
-            playlist, userId: string, country: string, age: number, entrance: number, items
+            playlist, userId: string, country: string, age: number, entrance: number, items, role: string
         }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
@@ -119,15 +119,16 @@ export class AuthService {
                     this.authStatusListener.next(true);
                     this.loadingListener.next(true);
 
-                    if (response.userDbId === this.test) {
+                  //  if the user is an admin
+                    if (response.role === 'admin') {
+                        console.log('admin');
                         this.adminFlag = true;
                         localStorage.setItem('admin', String(this.adminFlag));
                         this.isAdminAuthenticated = true;
                         this.adminAuthStatusListener.next(true);
                     }
-                    //  IF RESEARCHER !!!!!
-                    console.log('country ', response.country);
-                    if (response.country === 'researcher') {
+                    //  if the user is a researcher
+                    if (response.role === 'researcher') {
                         localStorage.setItem('researcher', String(this.researcherFlag));
                         this.isResearcherAuthenticated = true;
                         this.researcherAuthStatusListener.next(true);
@@ -262,6 +263,7 @@ export class AuthService {
         localStorage.removeItem('researcher');
         localStorage.removeItem('entrance');
         localStorage.removeItem('isVoted');
+        localStorage.removeItem('researchId');
     }
 
     // get my data from the local storage

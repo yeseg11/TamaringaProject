@@ -32,7 +32,8 @@ export class NewUserComponent implements OnInit, OnDestroy {
     // find the year that the user was in his twenties
     const twentiesAge = (new Date()).getFullYear() - form.value.age + 20;
 
-    this.authService.createUser(form.value.fullName, form.value.id, form.value.age, twentiesAge, form.value.password, form.value.country);
+    this.authService.createUser(form.value.fullName, form.value.id, form.value.age,
+      twentiesAge, form.value.password, form.value.country, 'user');
     // console.log('server: createUser()');
     // this.isLoading = false;
     form.resetForm();

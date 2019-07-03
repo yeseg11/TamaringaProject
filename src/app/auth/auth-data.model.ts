@@ -5,6 +5,7 @@ export interface AuthData {
   country: string;
   age: number;
   year: number;
+  role: string;
 }
 
 export interface AuthDataLogin {
