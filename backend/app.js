@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({extended: false}));
  */
 mongoose.connect("mongodb+srv://david:" + process.env.MONGO_ATLAS_PW + "@cluster0-bo1pz.mongodb.net/Tamaringa", {useNewUrlParser: true})
     .then(() => {
-        console.log("Connected to database!");
+         console.log("Connected to database!");
     })
     .catch(() => {
         console.log("Connection to database failed");
@@ -143,12 +143,12 @@ app.post("/api/user/login", async (req, res) => {
 
     if (!user) {
         return res.status(401).json({
-            message: "User is not found!"
+            message: "משתמש לא נמצא"
         });
     }
     if (user.password !== req.body.password) {
         return res.status(401).json({
-            message: "Invalid authentication credentials!"
+            message: "פרטי משתמש לא נכונים"
         });
     }
     const isUserVoted = user.isVoted;
@@ -160,7 +160,7 @@ app.post("/api/user/login", async (req, res) => {
     const playlist = await Playlist.findOne({name: user.group});
     if (!playlist) {
         return res.status(401).json({
-            message: "playlist is not found!"
+            message: "לא נמצאה רשימת שירים מתאימה עבורך"
         });
     }
 
@@ -182,7 +182,7 @@ app.post("/api/user/login", async (req, res) => {
             if (err) {
                 console.log("records.votes.userId\n", err, "\n\n");
                 return res.status(401).json({
-                    message: "playlist is not found!"
+                    message: "לא נמצאה רשימת שירים מתאימה עבורך"
                 });
             }
 
@@ -512,6 +512,8 @@ app.get("/api/user/:id/youtube/:ytid/rate/:n", async (req, res) => {
                 const pos = q.similarity.findIndex(x => x.user1 == u && x.user2 == data.id || x.user2 == u && x.user1 == data.id);
                 //console.log(pos);
                 if (pos >= 0) {
+                    console.log('userArr:\t',usersId,'\n');
+                    console.log('votesByUser:\t',votesByUser,'\n');
                     q.similarity[pos].similarity = similarity(userArr, votesByUser);
                 } else {
                     q.similarity.push({user1: u, user2: data.id, similarity: similarity(userArr, votesByUser)})

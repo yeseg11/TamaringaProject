@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     constructor(public authService: AuthService) {}
     // we know we get the form object which is of type ngForm
     onLogin(form: NgForm) {
-        console.log(form.value);
+        // console.log(form.value);
         if (form.invalid) {
             return;
         }

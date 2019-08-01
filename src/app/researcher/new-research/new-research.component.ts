@@ -63,7 +63,7 @@ export class NewResearchComponent implements OnInit {
 
   onAddResearch(form: NgForm) {
     if (form.invalid) {
-      console.log('invalid form');
+      // console.log('invalid form');
       return;
     }
     this.sDate = form.value.startDate.getDay() + '/' + form.value.startDate.getMonth() + '/' + form.value.startDate.getFullYear();
@@ -75,7 +75,7 @@ export class NewResearchComponent implements OnInit {
                                           form.value.variables,
                                           this.sDate,
                                           this.eDate);
-    console.log('server: createResearch()');
+    // console.log('server: createResearch()');
     form.resetForm();
     this.snackBar.open('מחקר נוצר', 'סגור', {
       duration: 2000,

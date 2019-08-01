@@ -85,7 +85,7 @@ export class ResearchService {
         this.researches.push(researchData);
         // update the array
         this.researchesUpdated.next([...this.researches]);
-        console.log('new research: ', researchData);
+        // console.log('new research: ', researchData);
       });
     // add the research to an array of researches
   }
@@ -105,7 +105,7 @@ export class ResearchService {
         // update the researches array
         this.researches = updatedResearches;
         this.researchesUpdated .next([...this.researches]);
-        console.log('deleted');
+        // console.log('deleted');
       });
   }
 
@@ -129,7 +129,7 @@ export class ResearchService {
           this.flag = true;
         }
       });
-    console.log('users names: ', this.userNames);
+    // console.log('users names: ', this.userNames);
     return this.userNames;
   }
 
@@ -147,9 +147,9 @@ export class ResearchService {
         BACKEND_URL + '/user/users')
       .subscribe(response => {
         // const userAuth = response.users;
-        console.log('response: ', response);
+        // console.log('response: ', response);
         this.usersAuth = response.users;
-        console.log('users: ', this.usersAuth);
+        // console.log('users: ', this.usersAuth);
       });
     // console.log('user auth', this.usersAuth);
     // return this.usersAuth;
@@ -161,7 +161,7 @@ export class ResearchService {
   }
 
   updateResearch(name: string, participants: string[], id: string, process: string, variables: string, startDate: string, endDate: string) {
-    console.log('update from service');
+    // console.log('update from service');
     const researchData: ResearchData = {name, participants, id, process, variables, startDate, endDate};
     this.http.put(BACKEND_URL + '/researcher/new-research/' + id, researchData)
       .subscribe(response => console.log(response));

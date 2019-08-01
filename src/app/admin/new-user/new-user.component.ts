@@ -20,10 +20,10 @@ export class NewUserComponent implements OnInit, OnDestroy {
 
   // "form" is the param that we got from the form by the user
   onAddUser(form: NgForm) {
-    console.log('client');
-    console.log(form.value);
+    // console.log('client');
+    // console.log(form.value);
     if (form.invalid) {
-      console.log('invalid form');
+      // console.log('invalid form');
       return;
     }
     // set the loading spinner to true

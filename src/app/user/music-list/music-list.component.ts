@@ -47,11 +47,11 @@ export class MusicListComponent implements OnInit {
             // console.log('playlist items:\n', this.items.authService.plFirstLogin, '\n\n');
             this.recordsFromService = this.authService.plFirstLogin.records;
             const recordsArrObj = this.recordsFromService;
-            console.log('recordsArrObj: ', recordsArrObj);
-            console.log(this.map);
-            for (let r = 0; r < 10; r++) {
+            // console.log('recordsArrObj: ', recordsArrObj);
+            // console.log(this.map);
+            for (let r = 0; r < 18; r++) {
                 const randRecord = recordsArrObj[Math.floor(Math.random() * recordsArrObj.length)];
-                console.log(randRecord);
+                // console.log(randRecord);
 
                 const videoId = randRecord.youtube.videoId;
                 const artist = randRecord.artist[0].name;
@@ -59,25 +59,25 @@ export class MusicListComponent implements OnInit {
 
                 this.titleOfRecord = artist + ' - ' + title;
                 this.map.set(videoId, this.titleOfRecord);
-                console.log(this.map);
             }
+            // console.log(this.map);
         }
         // after first user's vote, display complex playlist with his top songs, recommendation from other users.
         // display up to 3 top user songs, up to 3 recommendation from
         // other users and the rest display songs that the user not voted yet
         if (isUserVoted) {
             this.recordsFromService = this.authService.plOnceVote[0];
-            console.log(this.recordsFromService);
+            // console.log(this.recordsFromService);
             const recordsObj = this.recordsFromService;
             const topUserRecordsObj = recordsObj.topUser;
             const notEarUserRecordsObj = recordsObj.notEar;
             const recommendedUserRecordsObj = recordsObj.recSongs;
 
-            let size = 10;
+            let size = 15;
             let userTopMax = 3;
             let userRecMax = 3;
             const playlistToDisplay = [];
-            console.log(topUserRecordsObj);
+            // console.log(topUserRecordsObj);
             const topUserSize = topUserRecordsObj.length;
 
             // add up to 3 songs that user vote 4/5 into user's playlist
@@ -113,7 +113,7 @@ export class MusicListComponent implements OnInit {
 
                 this.titleOfRecord = artist + ' - ' + title;
                 this.map.set(videoId, this.titleOfRecord);
-                console.log(this.map);
+                // console.log(this.map);
             }
         }
     }
@@ -127,9 +127,9 @@ export class MusicListComponent implements OnInit {
      *
      */
     onAddRating(rate: number, userId: number, ytId: string) {
-        console.log('rate: ', rate, ' id: ', userId, ' youtube id: ', ytId);
-        console.log(this.authService.plOnceVote);
+        // console.log('rate: ', rate, ' id: ', userId, ' youtube id: ', ytId);
+        // console.log(this.authService.plOnceVote);
         this.authService.addVote(rate, userId, ytId);
-        console.log('vote has succeeded');
+        // console.log('vote has succeeded');
     }
 }

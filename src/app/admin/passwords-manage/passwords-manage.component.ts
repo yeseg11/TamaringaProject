@@ -22,12 +22,12 @@ export class PasswordsManageComponent implements OnInit {
     this.researchesService.getPasswords();
     this.userAuth = this.researchesService.usersAuth;
     // this.userAuth = this.researchesService.usersAuth;
-    console.log('user auth', this.userAuth);
+    // console.log('user auth', this.userAuth);
 
     for (const user of this.userAuth) {
       this.map.set(user.id, user.password);
     }
-    console.log(this.map);
+    // console.log(this.map);
    }
 
 }

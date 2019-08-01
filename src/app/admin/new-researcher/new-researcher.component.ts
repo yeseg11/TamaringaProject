@@ -18,18 +18,18 @@ export class NewResearcherComponent implements OnInit, OnDestroy {
 
   // "form" is the param that we got from the form by the user
   onAddResearcher(form: NgForm) {
-    console.log('researcher');
-    console.log(form.value);
+    // console.log('researcher');
+    // console.log(form.value);
     if (form.invalid) {
-      console.log('invalid form');
+      // console.log('invalid form');
       return;
     }
     // set the loading spinner to true
     this.isLoading = true;
 
     // find the year that the user was in his twenties
-    this.authService.createUser(form.value.fullName, form.value.id, 0, 0, form.value.password, 'researcher');
-    console.log('server: createResearcher()');
+    this.authService.createUser(form.value.fullName, form.value.id, 0, 0, form.value.password, 'no', 'researcher');
+    // console.log('server: createResearcher()');
     // this.isLoading = false;
     form.resetForm();
     this.snackBar.open('חוקר נוצר', 'סגור', {

@@ -11,12 +11,12 @@
       <form (submit)="onLogin(loginForm)" #loginForm="ngForm">
         <mat-form-field>
           <input class="input" matInput name="id" ngModel type="number" placeholder="תעודת זהות" #IdInput="ngModel" required id>
-          <mat-error *ngIf="IdInput.invalid">Please enter a valid ID.</mat-error>
+          <mat-error *ngIf="IdInput.invalid">אנא הכנס/י תעודת זהות תקינה</mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <input class="input" matInput name="password" ngModel type="password" placeholder="סיסמה" #passwordInput="ngModel" required>
-          <mat-error *ngIf="passwordInput.invalid">Please enter a valid password.</mat-error>
+          <mat-error *ngIf="passwordInput.invalid">אנא הכנס/י סיסמה</mat-error>
         </mat-form-field>
 
         <button mat-raised-button type="submit" *ngIf="!isLoading">התחבר/י</button>

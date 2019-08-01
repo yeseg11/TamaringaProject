@@ -87,10 +87,10 @@ export class AuthService {
         const authData: AuthData = {fullName, id, age, year, password, country, role};
         this.http.post(BACKEND_URL + '/user/signup', authData)
             .subscribe(response => {
-                console.log('response from server: ', response);
+                // console.log('response from server: ', response);
                 this.loadingListener.next(true);
             }, error => {
-                console.log(error);
+                // console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
                 this.loadingListener.next(false);
             });
@@ -115,7 +115,7 @@ export class AuthService {
         }>
         (BACKEND_URL + '/user/login', authDataLogin)
             .subscribe(response => {
-                console.log(response);
+                // console.log(response);
 
                 // we'll actually get back a response object which has token field which is of type string (as we created in the API)
                 const token = response.token;
@@ -125,7 +125,7 @@ export class AuthService {
                     // extract from the response the expire duration
                     const expiresInDuration = response.expiresIn;
                     this.setAuthTimer(expiresInDuration);
-                    console.log('expires in duration: ', expiresInDuration);
+                    // console.log('expires in duration: ', expiresInDuration);
 
                     localStorage.setItem('id', response.userId);
 
@@ -153,7 +153,7 @@ export class AuthService {
                     localStorage.setItem('userName', response.userName);
                     localStorage.setItem('isVoted', String(response.isVoted));
 
-                    console.log('response.entrance', response.entrance);
+                    // console.log('response.entrance', response.entrance);
                     this.plOnceVote = response.items;
                     this.plFirstLogin = response.playlist;
 
@@ -171,7 +171,7 @@ export class AuthService {
                     }
                 }
             }, error => {
-                console.log(error);
+                // console.log(error);
                 // when we get error in login, we provide to login component a false boolean to stop the spinner
                 this.authStatusListener.next(false);
                 this.loadingListener.next(false);
@@ -200,7 +200,7 @@ export class AuthService {
         // console.log(rate, userId, ytId);
         this.http.get(BACKEND_URL + '/user/' + userId + '/youtube/' + ytId + '/rate/' + rate)
             .subscribe(response => {
-                console.log(response);
+                // console.log(response);
             });
     }
 
